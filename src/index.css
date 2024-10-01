@@ -1,0 +1,30 @@
+:root {
+  --clr-primary: #f7f9fc;
+  --clr-text: #151717;
+  --clr-header: #2c3e50;
+  --clr-akcent: #4a90e2;
+  --clr-button: #50e3c2;
+  --clr-interaction: #e74c3c;
+
+  font-family: Roboto sans-serif;
+  line-height: 1.5;
+
+  color: var(--clr-text);
+  background-color: var(--clr-primary);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  place-items: center;
+}
