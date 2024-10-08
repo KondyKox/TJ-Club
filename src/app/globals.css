@@ -3,18 +3,43 @@
 @tailwind utilities;
 
 :root {
-  --clr-primary: #f7f9fc;
-  --clr-text: #151717;
+  --clr-background: #151717;
+  --clr-text: #f7f9fc;
   --clr-header: #2c3e50;
-  --clr-akcent: #4a90e2;
   --clr-button: #50e3c2;
+  --clr-akcent: #4a90e2;
   --clr-interaction: #e74c3c;
 }
 
 body {
   color: var(--clr-text);
-  background: var(--clr-primary);
+  background: var(--clr-background);
   font-family: Roboto, sans-serif;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: "Montserrat", sans-serif;
+  color: var(--clr-header);
+}
+
+.underline-custom {
+  position: relative;
+}
+
+.underline-custom::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(-8px);
+  width: 120px;
+  height: 2px;
+  background-color: var(--clr-text);
 }
 
 @layer utilities {

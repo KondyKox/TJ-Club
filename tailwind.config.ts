@@ -9,12 +9,15 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        primary: "var(--clr-primary)",
+        background: "var(--clr-background)",
         text: "var(--clr-text)",
         header: "var(--clr-header)",
         akcent: "var(--clr-akcent)",
         button: "var(--clr-button)",
         interaction: "var(--clr-interaction)",
+      },
+      dropShadow: {
+        custom: "0 0 0.5rem var(--clr-button)",
       },
     },
   },

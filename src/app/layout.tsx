@@ -1,3 +1,4 @@
+import Navbar from "@/components/Navbar";
 import "./globals.css";
 
 export default function RootLayout({
@@ -12,6 +13,7 @@ export default function RootLayout({
         <title>Tarnowska Mafia</title>
       </head>
       <body>
+        <Navbar />
         <main>{children}</main>
       </body>
     </html>
