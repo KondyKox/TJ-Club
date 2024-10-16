@@ -9,18 +9,23 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        background: "var(--clr-background)",
-        text: "var(--clr-text)",
+        primary: "var(--clr-primary)",
+        secondary: "var(--clr-secondary)",
+        light: "var(--clr-light)",
+        dark: "var(--clr-dark)",
         header: "var(--clr-header)",
         akcent: "var(--clr-akcent)",
         button: "var(--clr-button)",
         interaction: "var(--clr-interaction)",
       },
       dropShadow: {
-        custom: "0 0 0.5rem var(--clr-button)",
+        button: "0 0 0.5rem var(--clr-button)",
+        light: "0 0 0.5rem var(--clr-dark)",
+        dark: "0 0 0.5rem var(--clr-light)",
       },
     },
   },
   plugins: [],
+  darkMode: "class",
 };
 export default config;

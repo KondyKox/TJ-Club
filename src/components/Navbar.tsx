@@ -2,16 +2,13 @@
 
 import Link from "next/link";
 import React, { useState } from "react";
-import { Bars3Icon, UserIcon } from "@heroicons/react/24/solid";
+import { Bars3Icon } from "@heroicons/react/24/solid";
 import Button from "./Button";
 import Logo from "./Logo";
 import UserIconCustom from "./UserIconCustom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-
-  //   TODO: Change that to Firebase Auth
-  const isLoggedIn = false;
 
   // Toggle mobile menu
   const toggleMenu = () => {

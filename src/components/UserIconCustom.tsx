@@ -13,7 +13,7 @@ const UserIconCustom: React.FC<UserIconProps> = ({ children, onClick }) => {
       <Button
         onClick={onClick}
         noHover={true}
-        className="relative hover:text-button hover:drop-shadow-custom"
+        className="relative hover:text-button hover:drop-shadow-button"
       >
         {children}
         <UserIcon className="h-10 w-10" />

@@ -3,8 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --clr-background: #151717;
-  --clr-text: #f7f9fc;
+  --clr-primary: #f7f9fc;
+  --clr-secondary: #151717;
+  --clr-light: rgba(234, 179, 8, 0.8);
+  --clr-dark: rgb(31 41 55 0.8);
   --clr-header: #2c3e50;
   --clr-button: #50e3c2;
   --clr-akcent: #4a90e2;
@@ -12,8 +14,7 @@
 }
 
 body {
-  color: var(--clr-text);
-  background: var(--clr-background);
+  @apply transition-colors duration-300;
   font-family: Roboto, sans-serif;
 }
 
@@ -39,7 +40,11 @@ h6 {
   transform: translateX(-50%) translateY(-8px);
   width: 120px;
   height: 2px;
-  background-color: var(--clr-text);
+  background-color: var(--clr-secondary);
+}
+
+.dark .underline-custom::before {
+  background-color: var(--clr-primary)
 }
 
 @layer utilities {
