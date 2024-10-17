@@ -5,12 +5,25 @@
 :root {
   --clr-primary: #f7f9fc;
   --clr-secondary: #151717;
-  --clr-light: rgba(234, 179, 8, 0.8);
-  --clr-dark: rgb(31 41 55 0.8);
+  --clr-interaction: rgb(31 41 55 0.8);
   --clr-header: #2c3e50;
   --clr-button: #50e3c2;
   --clr-akcent: #4a90e2;
-  --clr-interaction: #e74c3c;
+  --clr-red: #e74c3c;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --clr-primary: #151717;
+    --clr-secondary: #f7f9fc;
+    --clr-interaction: rgba(234, 179, 8, 0.8);
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
 
 body {
@@ -28,6 +41,7 @@ h6 {
   color: var(--clr-header);
 }
 
+/* Underline for mobile menu */
 .underline-custom {
   position: relative;
 }
@@ -44,11 +58,10 @@ h6 {
 }
 
 .dark .underline-custom::before {
-  background-color: var(--clr-primary)
+  background-color: var(--clr-primary);
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
+/* ThemeButton */
+.theme-button-icon {
+  @apply w-6 h-6 text-interaction transition-transform duration-300 ease-in-out hover:scale-125;
 }

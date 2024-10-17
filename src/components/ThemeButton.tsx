@@ -22,14 +22,13 @@ const ThemeButton: React.FC = () => {
     <Button
       onClick={toggleDarkMode}
       noHover={true}
-      className="z-50 fixed bottom-4 right-4 !p-4 rounded-full hover:bg-light hover:drop-shadow-dark dark:hover:drop-shadow-light dark:hover:bg-dark 
-                    shadow-lg overflow-hidden dark:hover:!border-3 dark:hover:!border-light transition-all"
+      className="z-50 fixed bottom-4 right-4 !p-4 rounded-full hover:bg-primary hover:drop-shadow-interaction shadow-lg overflow-hidden transition-all"
     >
       <div className="flex items-center justify-center">
         {darkMode ? (
-          <SunIcon className="w-6 h-6 text-light transition-transform duration-300 ease-in-out hover:scale-125" />
+          <SunIcon className="theme-button-icon" />
         ) : (
-          <MoonIcon className="w-6 h-6 text-dark transition-transform duration-300 ease-in-out hover:scale-125" />
+          <MoonIcon className="theme-button-icon" />
         )}
       </div>
     </Button>

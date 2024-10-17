@@ -13,8 +13,15 @@ const THEME_KEY = "TJ_THEME";
 
 const useDarkMode = () => {
   const [darkMode, setDarkMode] = useState(false);
+  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
+    setIsMounted(true);
+  });
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const storedTheme = localStorage.getItem(THEME_KEY);
     const prefersDark = window.matchMedia(
       "(prefers-color-scheme: dark)"
@@ -28,7 +35,7 @@ const useDarkMode = () => {
       document.documentElement.classList.remove("dark");
       setDarkMode(false);
     }
-  }, []);
+  }, [isMounted]);
 
   /**
    * Toggles between dark & light mode.
