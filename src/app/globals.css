@@ -12,11 +12,20 @@
   --clr-red: #e74c3c;
 }
 
+/* Import font for headings */
+@font-face {
+  font-family: "Bebas Neue";
+  src: url("/fonts/BebasNeue-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --clr-primary: #151717;
     --clr-secondary: #f7f9fc;
     --clr-interaction: rgba(234, 179, 8, 0.8);
+    --clr-header: #d3c1af;
   }
 }
 
@@ -37,8 +46,41 @@ h3,
 h4,
 h5,
 h6 {
-  font-family: "Montserrat", sans-serif;
+  font-family: "Bebas Neue", sans-serif !important;
   color: var(--clr-header);
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 12px; /* szerokość dla pionowego scrollbar */
+  height: 12px; /* wysokość dla poziomego scrollbar */
+}
+
+/* Tor (tło) scrollbara */
+::-webkit-scrollbar-track {
+  background: var(--clr-primary); /* kolor tła */
+  border-radius: 10px; /* zaokrąglenie toru */
+}
+
+/* Sam uchwyt (rączka) scrollbara */
+::-webkit-scrollbar-thumb {
+  background: var(--clr-button);
+  border-radius: 10px; /* zaokrąglenie rączki */
+}
+
+/* Hover nad uchwytem */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--clr-akcent);
+  cursor: pointer;
+}
+
+/* Headers */
+.header {
+  @apply text-6xl md:text-8xl lg:text-9xl text-center py-4;
+}
+
+.sub-header {
+  @apply text-4xl md:text-6xl lg:text-7xl text-center py-4;
 }
 
 /* Underline for mobile menu */
