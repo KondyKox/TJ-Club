@@ -4,14 +4,15 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 
+const images = [
+  "/tj_club.png",
+  "/plakacik_TJ.png",
+  "/tj.jpg",
+  "/plakacik_TJ.png",
+];
+
 export default function Home() {
-  const images = [
-    "/tj_club.png",
-    "/plakacik_TJ.png",
-    "/tj.jpg",
-    "/plakacik_TJ.png",
-  ];
-  const [currentImages, setCurrentImages] = useState(images.slice(0, 2));
+  const [currentImages, setCurrentImages] = useState(images.slice(0, 3));
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
@@ -43,24 +44,44 @@ export default function Home() {
           className="lg:max-w-md xl:max-w-2xl md:w-full p-2 rounded-3xl hover:rounded-none transition-all duration-300 ease-in-out drop-shadow-button"
         />
       </div>
-      <div className="flex flex-col justify-center items-center w-full">
-        <h2 className="sub-header">Tu nasz albumik</h2>
-        <div className="w-full grid place-items-center md:grid-cols-2">
+
+      {/* Album section */}
+      <div className="flex flex-col md:flex-row justify-center items-center w-full overline-top">
+        <div className="w-full md:w-1/2 mb-2 flex flex-col justify-center items-center">
+          <h2 className="sub-header" style={{ paddingBottom: 0 }}>
+            Tu nasz albumik
+          </h2>
+          <p className="text-sm text-akcent pb-2">Zdjęcia Tarnowskiej Mafii</p>
+        </div>
+        <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-1/2 relative">
           {currentImages.map((imgSrc, index) => (
-            <Link href={"/album"} key={index}>
+            <Link
+              href={"/album"}
+              key={index}
+              className={`absolute md:relative transition-all duration-500 ease-in-out ${
+                fade ? "opacity-0" : index === 0 ? "opacity-100" : "opacity-50"
+              } ${index === 0 && "drop-shadow-button"}`}
+              style={{
+                zIndex: currentImages.length - index, // Kolejność obrazów
+                transform:
+                  window.innerWidth >= 768
+                    ? `translateX(-${index * 150}px)` // Przesunięcie w poziomie na md+
+                    : `translateY(${index * 30}px)`, // Przesunięcie w pionie na mobilnych
+              }}
+            >
               <Image
                 src={imgSrc}
                 alt={`Image ${index + 1}`}
                 width={256}
                 height={256}
-                className={`md:max-w-md p-2 rounded-3xl transition-all duration-500 ease-in-out drop-shadow-button ${
-                  fade ? "opacity-0" : "opacity-100"
-                }`}
+                className="md:min-w-48 p-2 rounded-3xl"
               />
             </Link>
           ))}
         </div>
       </div>
+
+      {/* TODO:  Dodać inne sekcje, jak będą robione ich strony*/}
     </div>
   );
 }

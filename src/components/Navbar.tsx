@@ -46,7 +46,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="fixed inset-0 bg-opacity-90 z-40 flex flex-col justify-center items-center space-y-4">
+        <div className="fixed inset-0 bg-opacity-90 z-40 flex flex-col justify-center items-center space-y-4 bg-primary">
           <div className="relative flex flex-col items-center">
             <Logo />
             <span className="underline-custom mt-8"></span>

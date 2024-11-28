@@ -29,12 +29,6 @@
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
-  }
-}
-
 body {
   @apply transition-colors duration-300;
   font-family: Roboto, sans-serif;
@@ -48,6 +42,56 @@ h5,
 h6 {
   font-family: "Bebas Neue", sans-serif !important;
   color: var(--clr-header);
+}
+
+/* Headers */
+.header {
+  @apply text-6xl md:text-8xl lg:text-9xl text-center py-4;
+}
+.sub-header {
+  @apply text-4xl md:text-6xl lg:text-7xl text-center py-4;
+}
+
+/* Overline for sections */
+@layer utilities {
+  .overline-top {
+    @apply relative py-2;
+  }
+  .overline-top::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    width: 90%;
+    height: 2px;
+    background-color: theme("colors.secondary");
+  }
+}
+
+/* Underline for mobile menu */
+@layer utilities {
+  .underline-custom {
+    position: relative;
+  }
+  .underline-custom::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    width: 120px;
+    height: 2px;
+    background-color: var(--clr-secondary);
+  }
+  .dark .underline-custom::before {
+    background-color: var(--clr-primary);
+  }
+}
+
+/* ThemeButton */
+.theme-button-icon {
+  @apply w-6 h-6 text-interaction transition-transform duration-300 ease-in-out hover:scale-125;
 }
 
 /* Scrollbar */
@@ -72,38 +116,4 @@ h6 {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--clr-akcent);
   cursor: pointer;
-}
-
-/* Headers */
-.header {
-  @apply text-6xl md:text-8xl lg:text-9xl text-center py-4;
-}
-
-.sub-header {
-  @apply text-4xl md:text-6xl lg:text-7xl text-center py-4;
-}
-
-/* Underline for mobile menu */
-.underline-custom {
-  position: relative;
-}
-
-.underline-custom::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%) translateY(-8px);
-  width: 120px;
-  height: 2px;
-  background-color: var(--clr-secondary);
-}
-
-.dark .underline-custom::before {
-  background-color: var(--clr-primary);
-}
-
-/* ThemeButton */
-.theme-button-icon {
-  @apply w-6 h-6 text-interaction transition-transform duration-300 ease-in-out hover:scale-125;
 }
