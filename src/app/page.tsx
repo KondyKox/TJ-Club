@@ -16,6 +16,7 @@ export default function Home() {
   const [fade, setFade] = useState(false);
 
   useEffect(() => {
+    // Fade animation for images
     const interval = setInterval(() => {
       setFade(true); // Start fade out
       setTimeout(() => {
@@ -33,7 +34,7 @@ export default function Home() {
   }, []);
 
   return (
-    <div className="flex flex-col justify-center items-center mt-10 gap-20">
+    <section className="flex flex-col justify-center items-center mt-10 gap-20">
       <div className="flex flex-col lg:flex-row justify-center items-center gap-2 md:gap-12">
         <h1 className="header">Tarnowska Mafia</h1>
         <Image
@@ -42,6 +43,7 @@ export default function Home() {
           width={512}
           height={512}
           className="lg:max-w-md xl:max-w-2xl md:w-full p-2 rounded-3xl hover:rounded-none transition-all duration-300 ease-in-out drop-shadow-button"
+          priority
         />
       </div>
 
@@ -75,13 +77,24 @@ export default function Home() {
                 width={256}
                 height={256}
                 className="md:min-w-48 p-2 rounded-3xl"
+                style={{ aspectRatio: "16/10" }}
+                loading="lazy"
               />
             </Link>
           ))}
         </div>
       </div>
+      <div className="flex justify-center items-center pb-2">
+        <p className="text-xl">
+          Więcej zdjęć na{" "}
+          <Link href={"/album"} className="text-interaction">
+            stronie albumu
+          </Link>
+          .
+        </p>
+      </div>
 
       {/* TODO:  Dodać inne sekcje, jak będą robione ich strony*/}
-    </div>
+    </section>
   );
 }

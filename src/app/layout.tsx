@@ -1,3 +1,4 @@
+import Footer from "@/components/Footer";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import ThemeButton from "@/components/ThemeButton";
@@ -17,6 +18,7 @@ export default function RootLayout({
         <ThemeButton />
         <Navbar />
         <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );
