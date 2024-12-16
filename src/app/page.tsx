@@ -87,7 +87,7 @@ export default function Home() {
       <div className="flex justify-center items-center pb-2">
         <p className="text-xl">
           Więcej zdjęć na{" "}
-          <Link href={"/album"} className="text-interaction">
+          <Link href={"/album"} className="link">
             stronie albumu
           </Link>
           .

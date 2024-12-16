@@ -20,6 +20,7 @@ const config: Config = {
       dropShadow: {
         button: "0 0 0.5rem var(--clr-button)",
         interaction: "0 0 0.5rem var(--clr-interaction)",
+        red: "0 0 0.5rem var(--clr-red)",
       },
     },
   },

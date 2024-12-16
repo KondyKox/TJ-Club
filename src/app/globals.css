@@ -52,6 +52,15 @@ h6 {
   @apply text-4xl md:text-6xl lg:text-7xl text-center py-4;
 }
 
+/* Input */
+.input {
+  @apply w-full p-2 border-none rounded outline-none text-secondary bg-gray-700 transition-all duration-300 ease-in-out focus:bg-akcent;
+}
+
+.link {
+  @apply text-akcent hover:text-interaction transition-all duration-300 ease-in-out;
+}
+
 /* Overline for sections */
 @layer utilities {
   .overline-top {
