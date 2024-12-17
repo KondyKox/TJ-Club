@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signOut,
   updateProfile,
@@ -50,4 +51,13 @@ export const logoutUser = async () => {
   } catch (error: any) {
     throw new Error(error.message);
   }
+};
+
+// Check if user is logged in
+export const checkUserLoggedIn = (): Promise<boolean> => {
+  return new Promise((resolve) => {
+    onAuthStateChanged(firebase.auth, (user) => {
+      resolve(!!user);
+    });
+  });
 };

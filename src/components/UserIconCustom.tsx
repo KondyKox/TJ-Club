@@ -3,10 +3,10 @@ import React from "react";
 import Button from "./Button";
 import { UserIcon } from "@heroicons/react/24/solid";
 import UserIconProps from "@/types/UserIconProps";
+import useAuth from "@/hooks/useAuth";
 
 const UserIconCustom: React.FC<UserIconProps> = ({ children, onClick }) => {
-  //   TODO: Change that to Firebase Auth
-  const isLoggedIn = false;
+  const { isLoggedIn } = useAuth();
 
   return (
     <Link href={isLoggedIn ? "/user" : "/login"}>
