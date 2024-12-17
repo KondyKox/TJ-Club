@@ -22,6 +22,9 @@ const config: Config = {
         interaction: "0 0 0.5rem var(--clr-interaction)",
         red: "0 0 0.5rem var(--clr-red)",
       },
+      boxShadow: {
+        secondary: "0 0.5rem 0.5rem var(--clr-secondary)",
+      },
     },
   },
   plugins: [],

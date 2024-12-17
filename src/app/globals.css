@@ -98,6 +98,13 @@ h6 {
   }
 }
 
+/* Gradient */
+@layer utilities {
+  .gradient-bg {
+    @apply bg-gradient-to-b from-primary to-gray-800;
+  }
+}
+
 /* ThemeButton */
 .theme-button-icon {
   @apply w-6 h-6 text-interaction transition-transform duration-300 ease-in-out hover:scale-125;
