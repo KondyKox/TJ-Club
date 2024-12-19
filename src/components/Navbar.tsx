@@ -23,12 +23,15 @@ const Navbar: React.FC = () => {
 
         {/* Buttons for desktop */}
         <div className="hidden md:flex space-x-12 text-xl">
-          <Link href="/gaming">
-            <Button>Gaming</Button>
-          </Link>
           <Link href="/album">
             <Button>Album</Button>
           </Link>
+          <Link href="/quotes">
+            <Button>Wielkie cytaty</Button>
+          </Link>
+          {/* <Link href="/gaming">
+            <Button>Gaming</Button>
+          </Link> */}
         </div>
 
         {/* User icon for desktop */}
@@ -52,16 +55,21 @@ const Navbar: React.FC = () => {
             <span className="underline-custom mt-8"></span>
           </div>
 
-          <Link href="/gaming">
-            <Button onClick={toggleMenu} className="text-2xl py-1">
-              Gaming
-            </Button>
-          </Link>
           <Link href="/album">
             <Button onClick={toggleMenu} className="text-2xl py-1">
               Album
             </Button>
           </Link>
+          <Link href="/quotes">
+            <Button onClick={toggleMenu} className="text-2xl py-1">
+              Wielkie cytaty
+            </Button>
+          </Link>
+          {/* <Link href="/gaming">
+            <Button onClick={toggleMenu} className="text-2xl py-1">
+              Gaming
+            </Button>
+          </Link> */}
 
           {/* User icon */}
           <UserIconCustom>

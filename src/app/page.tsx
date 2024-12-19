@@ -14,6 +14,19 @@ const images = [
 export default function Home() {
   const [currentImages, setCurrentImages] = useState(images.slice(0, 3));
   const [fade, setFade] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    // Sprawdź szerokość okna tylko w przeglądarce
+    const handleResize = () => {
+      setIsDesktop(window.innerWidth >= 768);
+    };
+
+    handleResize(); // Ustaw na początku
+    window.addEventListener("resize", handleResize); // Nasłuchuj zmian rozmiaru
+
+    return () => window.removeEventListener("resize", handleResize); // Usuń nasłuchiwacz
+  }, []);
 
   useEffect(() => {
     // Fade animation for images
@@ -55,33 +68,39 @@ export default function Home() {
           </h2>
           <p className="text-sm text-akcent pb-2">Zdjęcia Tarnowskiej Mafii</p>
         </div>
-        <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-1/2 relative">
-          {currentImages.map((imgSrc, index) => (
-            <Link
-              href={"/album"}
-              key={index}
-              className={`absolute md:relative transition-all duration-500 ease-in-out ${
-                fade ? "opacity-0" : index === 0 ? "opacity-100" : "opacity-50"
-              } ${index === 0 && "drop-shadow-button"}`}
-              style={{
-                zIndex: currentImages.length - index, // Kolejność obrazów
-                transform:
-                  window.innerWidth >= 768
-                    ? `translateX(-${index * 150}px)` // Przesunięcie w poziomie na md+
-                    : `translateY(${index * 30}px)`, // Przesunięcie w pionie na mobilnych
-              }}
-            >
-              <Image
-                src={imgSrc}
-                alt={`Image ${index + 1}`}
-                width={256}
-                height={256}
-                className="md:min-w-48 p-2 rounded-3xl"
-                style={{ aspectRatio: "16/10" }}
-                loading="lazy"
-              />
-            </Link>
-          ))}
+        <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-1/2">
+          <div
+            className={`flex ${isDesktop ? "flex-row" : "flex-col"} relative`}
+          >
+            {currentImages.map((imgSrc, index) => (
+              <Link
+                href={"/album"}
+                key={index}
+                className={`transition-all duration-500 ease-in-out ${
+                  fade
+                    ? "opacity-0"
+                    : index === 0
+                    ? "opacity-100"
+                    : "opacity-50"
+                } ${index === 0 && "drop-shadow-button"}`}
+                style={{
+                  zIndex: currentImages.length - index,
+                  marginLeft: isDesktop && index > 0 ? `-${index * 70}px` : "0",
+                  marginTop: !isDesktop && index > 0 ? `-${index * 70}px` : "0", // mobile
+                }}
+              >
+                <Image
+                  src={imgSrc}
+                  alt={`Image ${index + 1}`}
+                  width={256}
+                  height={256}
+                  className="p-2 rounded-3xl"
+                  style={{ aspectRatio: "16/10" }}
+                  loading="lazy"
+                />
+              </Link>
+            ))}
+          </div>
         </div>
       </div>
       <div className="flex justify-center items-center pb-2">
