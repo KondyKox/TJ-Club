@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getFirestore, collection } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -18,4 +18,10 @@ export const firebase = {
   auth: getAuth(app),
   db: getFirestore(app),
   storage: getStorage(app),
+};
+
+export const collections = {
+  images: collection(firebase.db, "images"),
+  likes: collection(firebase.db, "likes"),
+  comments: collection(firebase.db, "comments"),
 };

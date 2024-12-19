@@ -61,3 +61,8 @@ export const checkUserLoggedIn = (): Promise<boolean> => {
     });
   });
 };
+
+// Get current user
+export const getCurrentUser = () => {
+  return firebase.auth.currentUser;
+};
