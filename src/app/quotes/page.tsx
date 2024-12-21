@@ -1,11 +1,13 @@
 "use client";
 
 import Button from "@/components/Button";
+import useAuth from "@/hooks/useAuth";
 import { QuoteProps } from "@/types/QuoteProps";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Quotes = () => {
+  const user = useAuth();
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
@@ -121,41 +123,43 @@ const Quotes = () => {
       </div>
 
       {/* Add quote form */}
-      <div className="flex flex-col justify-center items-center gap-4">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col justify-center items-center gap-4"
-        >
-          <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-2">
-            <div className="flex flex-col justify-center items-center gap-4">
-              <input
-                type="file"
-                className="input"
-                value={newImageUrl || ""}
-                // onChange={(e) =>
-                //   setNewImageUrl(URL.createObjectURL(e.target.files?.[0] || null))
-                // }
-              />
-              <input
-                type="text"
-                placeholder="Autor..."
-                value={newAuthor}
-                className="input"
-                onChange={(e) => setNewAuthor(e.target.value)}
+      {user.isLoggedIn && (
+        <div className="flex flex-col justify-center items-center gap-4">
+          <form
+            onSubmit={handleSubmit}
+            className="flex flex-col justify-center items-center gap-4"
+          >
+            <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-2">
+              <div className="flex flex-col justify-center items-center gap-4">
+                <input
+                  type="file"
+                  className="input"
+                  value={newImageUrl || ""}
+                  // onChange={(e) =>
+                  //   setNewImageUrl(URL.createObjectURL(e.target.files?.[0] || null))
+                  // }
+                />
+                <input
+                  type="text"
+                  placeholder="Autor..."
+                  value={newAuthor}
+                  className="input"
+                  onChange={(e) => setNewAuthor(e.target.value)}
+                  required
+                />
+              </div>
+              <textarea
+                placeholder="Dodaj cytat..."
+                value={newContent}
+                className="input min-w-full md:min-w-72 min-h-24"
+                onChange={(e) => setNewContent(e.target.value)}
                 required
-              />
+              ></textarea>
             </div>
-            <textarea
-              placeholder="Dodaj cytat..."
-              value={newContent}
-              className="input min-w-full md:min-w-72 min-h-24"
-              onChange={(e) => setNewContent(e.target.value)}
-              required
-            ></textarea>
-          </div>
-          <Button className="border-2 border-button">Dodaj cytat</Button>
-        </form>
-      </div>
+            <Button className="border-2 border-button">Dodaj cytat</Button>
+          </form>
+        </div>
+      )}
 
       {/* Quotes */}
       <div className="p-2 flex flex-col justify-center items-center gap-2 border-b-2 border-interaction">

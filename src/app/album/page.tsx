@@ -51,14 +51,17 @@ const Album = () => {
     <section className="flex flex-col items-center justify-center">
       <h2 className="sub-header">Albumik</h2>
       {user.isLoggedIn && (
-        <div className="flex flex-col md:flex-row justify-center items-center">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-2">
           <input
             type="file"
+            className="input"
             onChange={(e) =>
               setNewImage(e.target.files ? e.target.files[0] : null)
             }
           />
-          <Button onClick={handleUpload}>Upload</Button>
+          <Button onClick={handleUpload} className="border-2 border-button">
+            Upload
+          </Button>
         </div>
       )}
       <div>
