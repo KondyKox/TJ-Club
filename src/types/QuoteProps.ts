@@ -1,8 +1,9 @@
 export interface QuoteProps {
-  id: number;
+  id: string;
   content: string;
   imageUrl: string | null;
   author: string;
+  createdAt: Date;
   likes: number;
   isLiked: boolean;
 }

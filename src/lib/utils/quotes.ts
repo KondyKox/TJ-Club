@@ -3,13 +3,38 @@ import {
   collection,
   getDocs,
   serverTimestamp,
+  Timestamp,
 } from "firebase/firestore";
 import { firebase } from "../firebaseConfig";
+import { QuoteProps } from "@/types/QuoteProps";
+
+// Get all quotes
+export const getQuotes = async (): Promise<QuoteProps[]> => {
+  const quotesCollection = collection(firebase.db, "quotes");
+  const snapshot = await getDocs(quotesCollection);
+
+  return snapshot.docs.map((doc) => {
+    const data = doc.data();
+
+    return {
+      id: doc.id,
+      content: data.content as string,
+      imageUrl: data.image as string | null,
+      author: data.author as string,
+      createdAt:
+        data.createdAt instanceof Date
+          ? data.createdAt
+          : new Date(data.createdAt.seconds * 1000),
+      likes: data.likes as number,
+      isLiked: false,
+    };
+  });
+};
 
 // Add new quote
 export const addQuote = async (
   content: string,
-  authorID: string,
+  author: string,
   image: File | null
 ) => {
   try {
@@ -36,11 +61,10 @@ export const addQuote = async (
 
     const docRef = await addDoc(collection(firebase.db, "quotes"), {
       content,
-      authorID,
+      author,
       image: imageUrl,
-      createdAt: serverTimestamp(),
-      likes: [],
-      comments: [],
+      createdAt: new Date(),
+      likes: 0,
     });
 
     console.log("Added quote with ID: ", docRef.id);
@@ -48,14 +72,4 @@ export const addQuote = async (
   } catch (error: any) {
     console.error("Error during adding quote: ", error);
   }
-};
-
-// Get mafia members to select quote author
-export const getAuthors = async () => {
-  const querySnapshot = await getDocs(collection(firebase.db, "mafia_members"));
-  const authors = querySnapshot.docs.map((doc) => ({
-    id: doc.id,
-    ...doc.data(),
-  }));
-  return authors;
 };

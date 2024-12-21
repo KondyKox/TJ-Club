@@ -3,6 +3,7 @@
 import Button from "@/components/Button";
 import useAuth from "@/hooks/useAuth";
 import { QuoteProps } from "@/types/QuoteProps";
+import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -12,53 +13,31 @@ const Quotes = () => {
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
   const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  //   Testing
-  const initialQuotes: QuoteProps[] = [
-    {
-      id: 1,
-      content: "komu w drogę temu chuj pod nogę",
-      imageUrl: "/plakacik_TJ.png",
-      author: "Olga i Wika",
-      likes: 0,
-      isLiked: false,
-    },
-    {
-      id: 2,
-      content: "przestan pawianić",
-      imageUrl: "/tj_club.png",
-      author: "Olga i Wika",
-      likes: 10,
-      isLiked: false,
-    },
-    {
-      id: 3,
-      content: "przestan pawianić",
-      imageUrl: "/tj_club.png",
-      author: "Olga i Wika",
-      likes: 10,
-      isLiked: false,
-    },
-    {
-      id: 4,
-      content: "przestan pawianić",
-      imageUrl: null,
-      author: "Olga i Wika",
-      likes: 10,
-      isLiked: false,
-    },
-    {
-      id: 5,
-      content: "przestan pawianić",
-      imageUrl: "/tj_club.png",
-      author: "Olga i Wika",
-      likes: 10,
-      isLiked: false,
-    },
-  ];
+  // Fetch quotes
+  const fetchQuotes = async () => {
+    try {
+      setLoading(true);
+
+      const response = await fetch("/api/quotes");
+      const data: QuoteProps[] = await response.json();
+
+      const sortedQuotes = data.sort(
+        (a, b) =>
+          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+      );
+
+      setQuotes(sortedQuotes);
+    } catch (error) {
+      console.error("Error during fetching quotes: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    setQuotes(initialQuotes);
+    fetchQuotes();
   }, []);
 
   // Like / Dislike a quote
@@ -78,35 +57,42 @@ const Quotes = () => {
   };
 
   // Add a new quote
-  const handleAddQuote = (
-    newQuote: Omit<QuoteProps, "id" | "likes" | "isLiked">
-  ) => {
-    console.log("Add quote");
-    setQuotes((prev) => [
-      ...prev,
-      {
-        ...newQuote,
-        id: prev.length + 1,
-        likes: 0,
-        isLiked: false,
-      },
-    ]);
+  const handleAddQuote = async (newQuote: {
+    content: string;
+    author: string;
+    image: string | null;
+  }) => {
+    try {
+      const response = await fetch("/api/quotes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newQuote),
+      });
+
+      if (!response.ok) throw new Error("Failed to add quote.");
+
+      await fetchQuotes();
+    } catch (error) {
+      console.error("Error during adding quote: ", error);
+    }
   };
 
   // Submit a form
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Submit form");
-    handleAddQuote({
-      author: newAuthor,
-      content: newContent,
-      imageUrl: newImageUrl,
-    });
 
-    // Reset
+    const newQuote = {
+      content: newContent,
+      author: newAuthor,
+      image: newImageUrl,
+    };
+
+    await handleAddQuote(newQuote);
+
+    console.log("Quote added successfully.");
     setNewAuthor("");
     setNewContent("");
-    setNewImageUrl("");
+    setNewImageUrl(null);
   };
 
   return (
@@ -135,9 +121,10 @@ const Quotes = () => {
                   type="file"
                   className="input"
                   value={newImageUrl || ""}
-                  // onChange={(e) =>
-                  //   setNewImageUrl(URL.createObjectURL(e.target.files?.[0] || null))
-                  // }
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) setNewImageUrl(URL.createObjectURL(file));
+                  }}
                 />
                 <input
                   type="text"
@@ -156,7 +143,9 @@ const Quotes = () => {
                 required
               ></textarea>
             </div>
-            <Button className="border-2 border-button">Dodaj cytat</Button>
+            <Button className="border-2 border-button">
+              {!loading ? "Dodaj cytat" : "Dodawanie..."}
+            </Button>
           </form>
         </div>
       )}
@@ -185,10 +174,22 @@ const Quotes = () => {
                 "{quote.content}"
               </p>
               <div className="flex justify-between items-center w-full">
-                <span className="text-gray-600 text-xs md:text-sm">
+                <span className="text-gray-500 text-xs md:text-sm">
                   ~ {quote.author}
                 </span>
-
+              </div>
+              <div className="flex justify-between items-center gap-2 text-xs text-gray-700">
+                {/* Date */}
+                <div className="flex gap-2">
+                  Dodano:{" "}
+                  <span className="text-red">
+                    {new Date(quote.createdAt).toLocaleDateString("pl-PL", {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
+                  </span>
+                </div>
                 {/* Likes */}
                 <div
                   className="flex md:justify-center items-center gap-2 text-sm md:text-base cursor-pointer transition-all duration-300 ease-in-out hover:text-red"
