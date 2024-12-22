@@ -1,16 +1,10 @@
-import {
-  addDoc,
-  collection,
-  getDocs,
-  serverTimestamp,
-  Timestamp,
-} from "firebase/firestore";
-import { firebase } from "../firebaseConfig";
+import { addDoc, getDocs } from "firebase/firestore";
+import { collections } from "../firebaseConfig";
 import { QuoteProps } from "@/types/QuoteProps";
 
 // Get all quotes
 export const getQuotes = async (): Promise<QuoteProps[]> => {
-  const quotesCollection = collection(firebase.db, "quotes");
+  const quotesCollection = collections.quotes;
   const snapshot = await getDocs(quotesCollection);
 
   return snapshot.docs.map((doc) => {
@@ -59,7 +53,7 @@ export const addQuote = async (
       imageUrl = data.secure_url;
     }
 
-    const docRef = await addDoc(collection(firebase.db, "quotes"), {
+    const docRef = await addDoc(collections.quotes, {
       content,
       author,
       image: imageUrl,

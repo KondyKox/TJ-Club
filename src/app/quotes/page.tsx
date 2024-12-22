@@ -3,7 +3,6 @@
 import Button from "@/components/Button";
 import useAuth from "@/hooks/useAuth";
 import { QuoteProps } from "@/types/QuoteProps";
-import { Timestamp } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
@@ -18,8 +17,6 @@ const Quotes = () => {
   // Fetch quotes
   const fetchQuotes = async () => {
     try {
-      setLoading(true);
-
       const response = await fetch("/api/quotes");
       const data: QuoteProps[] = await response.json();
 
@@ -31,8 +28,6 @@ const Quotes = () => {
       setQuotes(sortedQuotes);
     } catch (error) {
       console.error("Error during fetching quotes: ", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -63,6 +58,8 @@ const Quotes = () => {
     image: string | null;
   }) => {
     try {
+      setLoading(true);
+
       const response = await fetch("/api/quotes", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -74,6 +71,8 @@ const Quotes = () => {
       await fetchQuotes();
     } catch (error) {
       console.error("Error during adding quote: ", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -120,7 +119,7 @@ const Quotes = () => {
                 <input
                   type="file"
                   className="input"
-                  value={newImageUrl || ""}
+                  value={newImageUrl || ""} // TODO: Fix this
                   onChange={(e) => {
                     const file = e.target.files?.[0];
                     if (file) setNewImageUrl(URL.createObjectURL(file));
