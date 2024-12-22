@@ -150,11 +150,11 @@ const Quotes = () => {
       )}
 
       {/* Quotes */}
-      <div className="p-2 flex flex-col justify-center items-center gap-2 border-b-2 border-interaction">
+      <div className="flex flex-col justify-center items-center md:grid md:grid-cols-2 md:place-items-center gap-4 p-2">
         {quotes.map((quote) => (
           <div
             key={quote.id}
-            className="flex flex-col md:flex-row justify-center items-center gap-4 w-full p-4 border-t-2 border-interaction"
+            className="flex flex-col md:flex-row justify-center items-center gap-4 w-full bg-gray-950 p-6 rounded-lg"
           >
             <div className="flex justify-around items-center gap-4 w-full md:w-max">
               {quote.imageUrl && (
