@@ -5,5 +5,6 @@ export interface QuoteProps {
   author: string;
   createdAt: Date;
   likes: number;
+  likedBy: string[];
   isLiked: boolean;
 }

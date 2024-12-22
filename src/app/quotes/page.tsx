@@ -2,12 +2,16 @@
 
 import Button from "@/components/Button";
 import useAuth from "@/hooks/useAuth";
+import { getCurrentUser } from "@/lib/auth";
+import { collections } from "@/lib/firebaseConfig";
 import { QuoteProps } from "@/types/QuoteProps";
+import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Quotes = () => {
-  const user = useAuth();
+  const user = getCurrentUser();
+  const { isLoggedIn } = useAuth();
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
@@ -20,7 +24,14 @@ const Quotes = () => {
       const response = await fetch("/api/quotes");
       const data: QuoteProps[] = await response.json();
 
-      const sortedQuotes = data.sort(
+      // Check if user liked a quote
+      const updatedQuotes = data.map((quote) => ({
+        ...quote,
+        isLiked: user?.uid ? quote.likedBy.includes(user?.uid) : false,
+      }));
+
+      // Sort quotes by date
+      const sortedQuotes = updatedQuotes.sort(
         (a, b) =>
           new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
       );
@@ -33,22 +44,32 @@ const Quotes = () => {
 
   useEffect(() => {
     fetchQuotes();
-  }, []);
+  }, [user]);
 
   // Like / Dislike a quote
-  const handleLike = (quote: QuoteProps) => {
-    console.log(`${quote.isLiked ? "Dislike" : "Like"}`);
-    setQuotes((prev) =>
-      prev.map((q) =>
-        q === quote
-          ? {
-              ...q,
-              likes: q.isLiked ? q.likes - 1 : q.likes + 1,
-              isLiked: !q.isLiked,
-            }
-          : q
-      )
-    );
+  const handleLike = async (quote: QuoteProps) => {
+    if (!isLoggedIn) return;
+
+    const quoteRef = doc(collections.quotes, quote.id);
+
+    try {
+      if (quote.isLiked) {
+        await updateDoc(quoteRef, {
+          likes: quote.likes - 1,
+          likedBy: user?.uid ? arrayRemove(user?.uid) : false,
+        });
+      } else {
+        await updateDoc(quoteRef, {
+          likes: quote.likes + 1,
+          likedBy: user?.uid ? arrayUnion(user?.uid) : false,
+        });
+      }
+
+      fetchQuotes();
+      console.log(`${quote.isLiked ? "Dislike" : "Like"}`);
+    } catch (error) {
+      console.error("Error during liking quote: ", error);
+    }
   };
 
   // Add a new quote
@@ -108,7 +129,7 @@ const Quotes = () => {
       </div>
 
       {/* Add quote form */}
-      {user.isLoggedIn && (
+      {isLoggedIn && (
         <div className="flex flex-col justify-center items-center gap-4">
           <form
             onSubmit={handleSubmit}
@@ -142,7 +163,7 @@ const Quotes = () => {
                 required
               ></textarea>
             </div>
-            <Button className="border-2 border-button">
+            <Button className="border-2 border-button w-full">
               {!loading ? "Dodaj cytat" : "Dodawanie..."}
             </Button>
           </form>
