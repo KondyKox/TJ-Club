@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import Button from "@/components/Button";
 import Image from "next/image";
 import { ImageProps } from "@/types/ImageProps";
+import Likes from "@/components/Likes";
 
 const Album = () => {
   const user = useAuth();
@@ -161,23 +162,7 @@ const Album = () => {
                 <span>Komentarze</span>
               </div>
               {/* Likes */}
-              <div
-                className="flex justify-center items-center gap-2 transition-all duration-300 ease-in-out hover:text-red cursor-pointer"
-                onClick={() => handleLike(image)}
-              >
-                <span className={`${image.isLiked && "text-red"}`}>
-                  {image.likes}
-                </span>
-                <Image
-                  src={"/ano_vodka.svg"}
-                  alt="Polubienia"
-                  width={64}
-                  height={64}
-                  className={`max-w-1.5 md:max-w-2 transition-all duration-300 ease-in-out ${
-                    image.isLiked ? "drop-shadow-red" : ""
-                  }`}
-                />
-              </div>
+              <Likes element={image} handleLike={() => handleLike(image)} />
             </div>
           </div>
         ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
+import Likes from "@/components/Likes";
 import useAuth from "@/hooks/useAuth";
 import { getCurrentUser } from "@/lib/auth";
 import { collections } from "@/lib/firebaseConfig";
@@ -211,23 +212,7 @@ const Quotes = () => {
                   </span>
                 </div>
                 {/* Likes */}
-                <div
-                  className="flex md:justify-center items-center gap-2 text-sm md:text-base cursor-pointer transition-all duration-300 ease-in-out hover:text-red"
-                  onClick={() => handleLike(quote)}
-                >
-                  <span className={`${quote.isLiked && "text-red"}`}>
-                    {quote.likes}
-                  </span>
-                  <Image
-                    src={"/ano_vodka.svg"}
-                    alt="Polubienia"
-                    width={64}
-                    height={64}
-                    className={`max-w-1.5 md:max-w-2 transition-all duration-300 ease-in-out ${
-                      quote.isLiked ? "drop-shadow-red" : ""
-                    }`}
-                  />
-                </div>
+                <Likes element={quote} handleLike={() => handleLike(quote)} />
               </div>
             </div>
           </div>
