@@ -145,7 +145,7 @@ const Album = () => {
         {images?.map((image) => (
           <div
             key={image.id}
-            className="flex flex-col justify-center items-center gap-4 md:w-1/2 bg-gray-950 p-6 rounded-lg"
+            className="flex flex-col justify-center items-center gap-4 md:w-1/2 gradient-bg p-6 rounded-lg"
           >
             <h6 className="image-header">{image.title}</h6>
             <Image

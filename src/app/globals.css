@@ -104,7 +104,7 @@ h6 {
 /* Gradient */
 @layer utilities {
   .gradient-bg {
-    @apply bg-gradient-to-b from-primary to-gray-800;
+    @apply bg-gradient-to-b from-black to-gray-800;
   }
 }
 

@@ -175,7 +175,7 @@ const Quotes = () => {
         {quotes.map((quote) => (
           <div
             key={quote.id}
-            className="flex flex-col md:flex-row justify-center items-center gap-4 w-full bg-gray-950 p-6 rounded-lg"
+            className="flex flex-col md:flex-row justify-center items-center gap-4 w-full gradient-bg p-6 rounded-lg"
           >
             <div className="flex justify-around items-center gap-4 w-full md:w-max">
               {quote.imageUrl && (
@@ -198,7 +198,7 @@ const Quotes = () => {
                   ~ {quote.author}
                 </span>
               </div>
-              <div className="flex justify-between items-center gap-2 text-xs text-gray-700">
+              <div className="flex justify-between items-center gap-2 text-xs text-gray-400">
                 {/* Date */}
                 <div className="flex gap-2">
                   Dodano:{" "}
