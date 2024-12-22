@@ -136,7 +136,7 @@ const Quotes = () => {
             className="flex flex-col justify-center items-center gap-4"
           >
             <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-2">
-              <div className="flex flex-col justify-center items-center gap-4">
+              <div className="flex flex-col justify-center items-center gap-2">
                 <input
                   type="file"
                   className="input"
