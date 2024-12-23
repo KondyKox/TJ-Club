@@ -1,3 +1,4 @@
+import { adminAuth } from "@/lib/firebaseAdmin";
 import { collections } from "@/lib/firebaseConfig";
 import { addDoc, getDocs, orderBy, query } from "firebase/firestore";
 import { NextResponse } from "next/server";
@@ -35,6 +36,15 @@ export async function GET() {
 // Add new quote
 export async function POST(req: Request) {
   try {
+    const authHeader = req.headers.get("authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer "))
+      throw new Error("No authorization token.");
+
+    const token = authHeader.split(" ")[1];
+    const decodedToken = await adminAuth.verifyIdToken(token);
+
+    const { uid } = decodedToken; // User's UID
+
     const { content, author, image } = await req.json();
     let imageUrl = "";
 
@@ -62,6 +72,7 @@ export async function POST(req: Request) {
       author,
       image: imageUrl,
       createdAt: new Date(),
+      addedBy: uid,
       likes: 0,
       likedBy: [],
     });

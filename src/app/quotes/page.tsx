@@ -4,6 +4,7 @@ import Button from "@/components/Button";
 import Quote from "@/components/Quote";
 import useAuth from "@/hooks/useAuth";
 import { getCurrentUser } from "@/lib/auth";
+import { firebase } from "@/lib/firebaseConfig";
 import { fetchQuotes } from "@/lib/utils/quotes";
 import { QuoteProps } from "@/types/QuoteProps";
 import { useEffect, useState } from "react";
@@ -17,6 +18,10 @@ const Quotes = () => {
   const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
+  // Pagination
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [quotesPerPage, setQuotesPerPage] = useState<number>(6); // Default for desktop
+
   // Fetch quotes
   const loadQuotes = async () => {
     const fetchedQuotes = await fetchQuotes();
@@ -27,6 +32,18 @@ const Quotes = () => {
     loadQuotes();
   }, [user]);
 
+  // Dynamiczna liczba cytatów w zależności od urządzenia
+  useEffect(() => {
+    const handleResize = () => {
+      setQuotesPerPage(window.innerWidth < 768 ? 4 : 6); // 4 cytaty na mobile, 6 na desktop
+    };
+
+    handleResize(); // Ustaw na start
+    window.addEventListener("resize", handleResize); // Nasłuchuj zmian
+
+    return () => window.removeEventListener("resize", handleResize); // Usuń nasłuchiwacz
+  }, []);
+
   // Add a new quote
   const handleAddQuote = async (newQuote: {
     content: string;
@@ -36,9 +53,14 @@ const Quotes = () => {
     try {
       setLoading(true);
 
+      const token = await user?.getIdToken();
+
       const response = await fetch("/api/quotes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(newQuote),
       });
 
@@ -70,6 +92,13 @@ const Quotes = () => {
     setNewImageUrl(null);
   };
 
+  // Cytaty na aktualnej stronie
+  const indexOfLastQuote = currentPage * quotesPerPage;
+  const indexOfFirstQuote = indexOfLastQuote - quotesPerPage;
+  const currentQuotes = quotes.slice(indexOfFirstQuote, indexOfLastQuote);
+
+  const totalPages = Math.ceil(quotes.length / quotesPerPage);
+
   return (
     <section
       className="flex flex-col justify-center items-center"
@@ -77,9 +106,7 @@ const Quotes = () => {
     >
       {/* Header */}
       <div className="flex flex-col justify-center items-center">
-        <h2 className="sub-header" style={{ paddingBottom: "0" }}>
-          Cytaty Tarnowskich Mafiozów
-        </h2>
+        <h2 className="sub-header">Cytaty Tarnowskich Mafiozów</h2>
         <span className="text-gray-600 text-sm">(są zajebiste)</span>
       </div>
 
@@ -88,7 +115,7 @@ const Quotes = () => {
         <div className="flex flex-col justify-center items-center gap-4">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center gap-4"
+            className="flex flex-col justify-center items-center gap-4 p-2"
           >
             <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-2">
               <div className="flex flex-col justify-center items-center gap-2">
@@ -127,8 +154,27 @@ const Quotes = () => {
 
       {/* Quotes */}
       <div className="flex flex-col justify-center items-center md:grid md:grid-cols-2 md:place-items-center gap-4 p-2">
-        {quotes.map((quote) => (
-          <Quote key={quote.id} quote={quote} loadQuotes={loadQuotes} />
+        {currentQuotes.map((quote) => (
+          <div key={quote.id} className="min-w-72 md:min-w-96">
+            <Quote quote={quote} loadQuotes={loadQuotes} />
+          </div>
+        ))}
+      </div>
+
+      <div className="flex justify-center items-center gap-2 mt-4">
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            className="page-btn"
+            style={{
+              backgroundColor:
+                index + 1 === currentPage ? "var(--clr-akcent)" : "",
+              color: index + 1 === currentPage ? "var(--clr-secondary)" : "",
+            }}
+            onClick={() => setCurrentPage(index + 1)}
+          >
+            {index + 1}
+          </button>
         ))}
       </div>
     </section>

@@ -59,9 +59,11 @@ h6 {
 .input {
   @apply w-full p-2 border-none rounded outline-none text-secondary bg-gray-700 transition-all duration-300 ease-in-out focus:bg-akcent;
 }
-
 .link {
   @apply text-akcent hover:text-interaction transition-all duration-300 ease-in-out;
+}
+.page-btn {
+  @apply px-4 py-2 text-primary bg-secondary rounded-lg hover:bg-button transition-all duration-300 ease-in-out;
 }
 
 /* Overline for sections */
