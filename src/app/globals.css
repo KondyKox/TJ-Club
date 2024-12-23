@@ -46,13 +46,13 @@ h6 {
 
 /* Headers */
 .header {
-  @apply text-6xl md:text-8xl lg:text-9xl text-center py-4;
+  @apply text-6xl md:text-8xl lg:text-9xl text-center;
 }
 .sub-header {
-  @apply text-4xl md:text-6xl lg:text-7xl text-center py-4;
+  @apply text-4xl md:text-6xl lg:text-7xl text-center;
 }
 .image-header {
-  @apply text-3xl md:text-4xl lg:text-5xl text-center py-4;
+  @apply text-3xl md:text-4xl lg:text-5xl text-center;
 }
 
 /* Input */

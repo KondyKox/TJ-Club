@@ -1,13 +1,11 @@
 "use client";
 
 import Button from "@/components/Button";
-import Likes from "@/components/Likes";
+import Quote from "@/components/Quote";
 import useAuth from "@/hooks/useAuth";
 import { getCurrentUser } from "@/lib/auth";
-import { collections } from "@/lib/firebaseConfig";
+import { fetchQuotes } from "@/lib/utils/quotes";
 import { QuoteProps } from "@/types/QuoteProps";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
-import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const Quotes = () => {
@@ -20,58 +18,14 @@ const Quotes = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch quotes
-  const fetchQuotes = async () => {
-    try {
-      const response = await fetch("/api/quotes");
-      const data: QuoteProps[] = await response.json();
-
-      // Check if user liked a quote
-      const updatedQuotes = data.map((quote) => ({
-        ...quote,
-        isLiked: user?.uid ? quote.likedBy.includes(user?.uid) : false,
-      }));
-
-      // Sort quotes by date
-      const sortedQuotes = updatedQuotes.sort(
-        (a, b) =>
-          new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-      );
-
-      setQuotes(sortedQuotes);
-    } catch (error) {
-      console.error("Error during fetching quotes: ", error);
-    }
+  const loadQuotes = async () => {
+    const fetchedQuotes = await fetchQuotes();
+    setQuotes(fetchedQuotes);
   };
 
   useEffect(() => {
-    fetchQuotes();
+    loadQuotes();
   }, [user]);
-
-  // Like / Dislike a quote
-  const handleLike = async (quote: QuoteProps) => {
-    if (!isLoggedIn) return;
-
-    const quoteRef = doc(collections.quotes, quote.id);
-
-    try {
-      if (quote.isLiked) {
-        await updateDoc(quoteRef, {
-          likes: quote.likes - 1,
-          likedBy: user?.uid ? arrayRemove(user?.uid) : false,
-        });
-      } else {
-        await updateDoc(quoteRef, {
-          likes: quote.likes + 1,
-          likedBy: user?.uid ? arrayUnion(user?.uid) : false,
-        });
-      }
-
-      fetchQuotes();
-      console.log(`${quote.isLiked ? "Dislike" : "Like"}`);
-    } catch (error) {
-      console.error("Error during liking quote: ", error);
-    }
-  };
 
   // Add a new quote
   const handleAddQuote = async (newQuote: {
@@ -90,7 +44,7 @@ const Quotes = () => {
 
       if (!response.ok) throw new Error("Failed to add quote.");
 
-      await fetchQuotes();
+      await loadQuotes();
     } catch (error) {
       console.error("Error during adding quote: ", error);
     } finally {
@@ -174,48 +128,7 @@ const Quotes = () => {
       {/* Quotes */}
       <div className="flex flex-col justify-center items-center md:grid md:grid-cols-2 md:place-items-center gap-4 p-2">
         {quotes.map((quote) => (
-          <div
-            key={quote.id}
-            className="flex flex-col md:flex-row justify-center items-center gap-4 w-full gradient-bg p-6 rounded-lg"
-          >
-            <div className="flex justify-around items-center gap-4 w-full md:w-max">
-              {quote.imageUrl && (
-                <Image
-                  src={quote.imageUrl}
-                  alt={`Cytat od ${quote.author}`}
-                  width={256}
-                  height={256}
-                  className="rounded w-56"
-                />
-              )}
-            </div>
-            {/* Quote content */}
-            <div className="flex flex-col gap-2 w-full max-w-1/2">
-              <p className="text-akcent font-bold italic text-wrap text-sm md:text-lg">
-                "{quote.content}"
-              </p>
-              <div className="flex justify-between items-center w-full">
-                <span className="text-gray-500 text-xs md:text-sm">
-                  ~ {quote.author}
-                </span>
-              </div>
-              <div className="flex justify-between items-center gap-2 text-xs text-gray-400">
-                {/* Date */}
-                <div className="flex gap-2">
-                  Dodano:{" "}
-                  <span className="text-red">
-                    {new Date(quote.createdAt).toLocaleDateString("pl-PL", {
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                  </span>
-                </div>
-                {/* Likes */}
-                <Likes element={quote} handleLike={() => handleLike(quote)} />
-              </div>
-            </div>
-          </div>
+          <Quote key={quote.id} quote={quote} loadQuotes={loadQuotes} />
         ))}
       </div>
     </section>
