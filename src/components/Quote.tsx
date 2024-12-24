@@ -38,7 +38,7 @@ const Quote = ({
       }
 
       loadQuotes();
-      console.log(`${quote.isLiked ? "Dislike" : "Like"}`);
+      console.log(`${quote.isLiked ? "Quote disliked" : "Quote liked"}`);
     } catch (error) {
       console.error("Error during liking quote: ", error);
     }
@@ -46,18 +46,6 @@ const Quote = ({
 
   return (
     <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full gradient-bg p-6 rounded-lg">
-      <div className="flex justify-around items-center gap-4 w-full md:w-max">
-        {quote.imageUrl && (
-          <Image
-            src={quote.imageUrl}
-            alt={`Cytat od ${quote.author}`}
-            width={256}
-            height={256}
-            className="rounded w-56"
-            loading="lazy"
-          />
-        )}
-      </div>
       {/* Quote content */}
       <div className="flex flex-col gap-2 w-full max-w-1/2">
         <p className="text-akcent font-bold italic text-wrap text-sm md:text-lg">

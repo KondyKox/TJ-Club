@@ -45,32 +45,11 @@ export async function POST(req: Request) {
 
     const { uid } = decodedToken; // User's UID
 
-    const { content, author, image } = await req.json();
-    let imageUrl = "";
-
-    // If quote has image - upload image
-    if (image) {
-      const formData = new FormData();
-      formData.append("file", image);
-      formData.append("upload_preset", "tj_quotes");
-
-      // Upload image to cloudinary
-      const uploadResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const data = await uploadResponse.json();
-      imageUrl = data.secure_url;
-    }
+    const { content, author } = await req.json();
 
     const docRef = await addDoc(collections.quotes, {
       content,
       author,
-      image: imageUrl,
       createdAt: new Date(),
       addedBy: uid,
       likes: 0,

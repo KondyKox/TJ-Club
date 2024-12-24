@@ -15,7 +15,6 @@ const Quotes = () => {
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
-  const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   // Fetch quotes
@@ -32,7 +31,6 @@ const Quotes = () => {
   const handleAddQuote = async (newQuote: {
     content: string;
     author: string;
-    image: string | null;
   }) => {
     try {
       setLoading(true);
@@ -65,7 +63,6 @@ const Quotes = () => {
     const newQuote = {
       content: newContent,
       author: newAuthor,
-      image: newImageUrl,
     };
 
     await handleAddQuote(newQuote);
@@ -73,7 +70,6 @@ const Quotes = () => {
     console.log("Quote added successfully.");
     setNewAuthor("");
     setNewContent("");
-    setNewImageUrl(null);
   };
 
   return (
@@ -89,31 +85,20 @@ const Quotes = () => {
 
       {/* Add quote form */}
       {isLoggedIn && (
-        <div className="flex flex-col justify-center items-center gap-4">
+        <div className="flex flex-col justify-center items-center gap-4 w-full md:w-1/2">
           <form
             onSubmit={handleSubmit}
-            className="flex flex-col justify-center items-center gap-4 p-2"
+            className="flex flex-col justify-center items-center gap-4 p-4 w-full"
           >
-            <div className="flex flex-col md:flex-row justify-center items-center gap-4 p-2">
-              <div className="flex flex-col justify-center items-center gap-2">
-                <input
-                  type="file"
-                  className="input"
-                  value={newImageUrl || ""} // TODO: Fix this
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) setNewImageUrl(URL.createObjectURL(file));
-                  }}
-                />
-                <input
-                  type="text"
-                  placeholder="Autor..."
-                  value={newAuthor}
-                  className="input"
-                  onChange={(e) => setNewAuthor(e.target.value)}
-                  required
-                />
-              </div>
+            <div className="flex flex-col justify-center items-center gap-4 w-full">
+              <input
+                type="text"
+                placeholder="Autor..."
+                value={newAuthor}
+                className="input"
+                onChange={(e) => setNewAuthor(e.target.value)}
+                required
+              />
               <textarea
                 placeholder="Dodaj cytat..."
                 value={newContent}
@@ -130,7 +115,6 @@ const Quotes = () => {
       )}
 
       {/* Quotes */}
-
       <Pagination
         items={quotes}
         itemsPerPage={6}
