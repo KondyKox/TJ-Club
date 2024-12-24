@@ -2,8 +2,11 @@
 
 import Button from "@/components/Button";
 import Logout from "@/components/Logout";
+import Modal from "@/components/Modal";
 import useUser from "@/hooks/useUser";
+import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
+import { useState } from "react";
 
 // Fields with user data
 const userFields = [
@@ -13,6 +16,45 @@ const userFields = [
 
 const UserPage = () => {
   const { userData, loading } = useUser();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [modalType, setModalType] = useState<"edit" | "password" | null>(null);
+  const [formData, setFormData] = useState({
+    displayName: userData?.displayName || "",
+    email: userData?.email || "",
+  });
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+
+  // Edit user profile
+  const handleEditClick = () => {
+    setIsModalOpen(true);
+    setModalType("edit");
+  };
+
+  const handleEditProfile = () => {
+    console.log("Edit profile");
+  };
+
+  // Change user password
+  const changePasswordClick = () => {
+    setIsModalOpen(true);
+    setModalType("password");
+  };
+
+  const handleChangePassword = () => {
+    console.log("Change password");
+  };
+
+  // Close modal
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setModalType(null);
+  };
+
+  // Show / Hide password
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   return (
     <div className="flex flex-col justify-center items-center w-full mx-auto my-12 gap-2">
@@ -52,12 +94,86 @@ const UserPage = () => {
         {/* Opcje dla użytkownika */}
         <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
           <div className="flex justify-center items-center w-full gap-4">
-            <Button className="border-2 border-button">Edytuj Profil</Button>
-            <Button className="border-2 border-button">Zmiana Hasła</Button>
+            <Button
+              onClick={() => handleEditClick()}
+              className="border-2 border-button"
+            >
+              Edytuj Profil
+            </Button>
+            <Button
+              onClick={() => changePasswordClick()}
+              className="border-2 border-button"
+            >
+              Zmiana Hasła
+            </Button>
           </div>
           <Logout />
         </div>
       </div>
+
+      {/* Modal for editing profile / password change  */}
+      <Modal isOpen={isModalOpen} onClose={() => closeModal()}>
+        {modalType === "edit" ? (
+          <div className="flex flex-col justify-center items-center gap-4 p-2">
+            <h3 className="sub-header">Edycja</h3>
+            <div className="flex flex-col justify-center items-center gap-4 mt-4">
+              <div className="flex flex-col justify-center items-center gap-2">
+                {userFields.map((field, index) => (
+                  <input
+                    key={index}
+                    type={`${field.key} === "email" ? "email" : "text"`}
+                    className="input"
+                    placeholder={field.label}
+                    value={userData?.[field.key as keyof typeof userData] || ""}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        [field.key]: e.target.value,
+                      }))
+                    }
+                  />
+                ))}
+              </div>
+              <Button
+                className="border-2 border-button w-full"
+                onClick={() => handleEditProfile()}
+              >
+                Zapisz
+              </Button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col justify-center items-center gap-4">
+            <h3 className="sub-header">Zmiana hasła</h3>
+            <div className="flex flex-col justify-center items-center gap-2 w-full relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className="input"
+                placeholder="Nowe hasło"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-2 bottom-2 text-gray-500"
+              >
+                {showPassword ? (
+                  <EyeSlashIcon className="h-6 w-6" />
+                ) : (
+                  <EyeIcon className="h-6 w-6" />
+                )}
+              </button>
+            </div>
+            <Button
+              className="border-2 border-button w-full"
+              onClick={() => handleChangePassword()}
+            >
+              Zapisz
+            </Button>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
