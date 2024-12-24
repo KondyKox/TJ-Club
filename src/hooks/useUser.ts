@@ -7,18 +7,17 @@ const useUser = () => {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const fetchUserData = () => {
-      const currentUser = getCurrentUser();
+    const fetchUserData = async () => {
+      const currentUser = await getCurrentUser();
 
       if (currentUser) {
         setUserData({
+          uid: currentUser.uid,
           displayName: currentUser.displayName,
           email: currentUser.email,
           photoURL: currentUser.photoURL,
         });
-      } else {
-        console.warn("No logged in user.");
-      }
+      } else console.warn("No logged in user.");
 
       setLoading(false);
     };

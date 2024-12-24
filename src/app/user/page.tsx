@@ -19,11 +19,14 @@ const UserPage = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"edit" | "password" | null>(null);
   const [formData, setFormData] = useState({
-    displayName: userData?.displayName || "",
-    email: userData?.email || "",
+    displayName: userData?.displayName || "Brak danych",
+    email: userData?.email || "Brak danych",
   });
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState<string>("");
+  const [repPassword, setRepPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState<boolean>(false);
 
   // Edit user profile
   const handleEditClick = () => {
@@ -31,8 +34,33 @@ const UserPage = () => {
     setModalType("edit");
   };
 
-  const handleEditProfile = () => {
-    console.log("Edit profile");
+  const handleEditProfile = async () => {
+    try {
+      setSaving(true);
+
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uid: userData?.uid,
+          displayName: formData.displayName,
+          email: formData.email,
+          photoURL: userData?.photoURL, // TODO: Not implemented yet
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error);
+
+      closeModal();
+      console.log("Profile updated.");
+    } catch (error: any) {
+      console.error("Error updating user:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Change user password
@@ -41,8 +69,38 @@ const UserPage = () => {
     setModalType("password");
   };
 
-  const handleChangePassword = () => {
-    console.log("Change password");
+  const handleChangePassword = async () => {
+    if (password !== repPassword) {
+      setError("Hasła się nie zgadzają.");
+      console.error("Passwords do not match.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+
+      const response = await fetch("/api/user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          uid: userData?.uid,
+          password,
+        }),
+      });
+
+      const result = await response.json();
+      if (!response.ok)
+        throw new Error(result.error || "Cannot change password.");
+
+      console.log("Password changed.");
+      closeModal();
+    } catch (error) {
+      console.error("Erro changing password:", error);
+    } finally {
+      setSaving(false);
+    }
   };
 
   // Close modal
@@ -82,8 +140,7 @@ const UserPage = () => {
                 <p className="text-md font-semibold">
                   {field.label}:{" "}
                   <span className="text-akcent font-bold">
-                    {userData?.[field.key as keyof typeof userData] ||
-                      "Brak danych"}
+                    {userData?.[field.key as keyof typeof userData]}
                   </span>
                 </p>
               </div>
@@ -121,10 +178,10 @@ const UserPage = () => {
                 {userFields.map((field, index) => (
                   <input
                     key={index}
-                    type={`${field.key} === "email" ? "email" : "text"`}
+                    type={field.key === "email" ? "email" : "text"}
                     className="input"
                     placeholder={field.label}
-                    value={userData?.[field.key as keyof typeof userData] || ""}
+                    value={formData[field.key as keyof typeof formData]}
                     onChange={(e) =>
                       setFormData((prev) => ({
                         ...prev,
@@ -138,8 +195,9 @@ const UserPage = () => {
                 className="border-2 border-button w-full"
                 onClick={() => handleEditProfile()}
               >
-                Zapisz
+                {saving ? "Zapisywanie..." : "Zapisz"}
               </Button>
+              {error && <p className="text-red-500">{error}</p>}
             </div>
           </div>
         ) : (
@@ -152,6 +210,13 @@ const UserPage = () => {
                 placeholder="Nowe hasło"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+              />
+              <input
+                type={showPassword ? "text" : "password"}
+                className="input"
+                placeholder="Powtórz hasło"
+                value={repPassword}
+                onChange={(e) => setRepPassword(e.target.value)}
               />
               <button
                 type="button"
@@ -169,7 +234,7 @@ const UserPage = () => {
               className="border-2 border-button w-full"
               onClick={() => handleChangePassword()}
             >
-              Zapisz
+              {saving ? "Zapisywanie..." : "Zapisz"}
             </Button>
           </div>
         )}
