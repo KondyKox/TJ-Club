@@ -66,6 +66,11 @@ h6 {
   @apply px-4 py-2 text-primary bg-secondary rounded-lg hover:bg-button transition-all duration-300 ease-in-out;
 }
 
+/* User page elements */
+.user-field {
+  @apply p-4 rounded-lg border-2 border-gray-600 shadow-md bg-gray-800 flex justify-between items-center w-full max-w-[90%];
+}
+
 /* Overline for sections */
 @layer utilities {
   .overline-top {
