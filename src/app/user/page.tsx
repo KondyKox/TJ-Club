@@ -1,9 +1,9 @@
 "use client";
 
-import Button from "@/components/Button";
-import LoadingOverlay from "@/components/Loading";
-import Logout from "@/components/Logout";
-import Modal from "@/components/Modal";
+import Button from "@/components/ui/Button";
+import LoadingOverlay from "@/components/layout/Loading";
+import Logout from "@/components/features/Logout";
+import Modal from "@/components/ui/Modal";
 import ChangePasswordModal from "@/components/user/ChangePasswordModal";
 import EditProfileModal from "@/components/user/EditProfileModal";
 import useUser from "@/hooks/useUser";

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { logoutUser } from "../lib/auth";
-import Button from "./Button";
+import { logoutUser } from "../../lib/auth";
+import Button from "../ui/Button";
 import { useRouter } from "next/navigation";
 
 const Logout = () => {

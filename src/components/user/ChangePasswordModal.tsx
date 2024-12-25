@@ -1,7 +1,7 @@
 "use client";
 
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
-import Button from "../Button";
+import Button from "../ui/Button";
 import { useState } from "react";
 import { ChangePasswordModalProps } from "@/types/ProfileModalProps";
 

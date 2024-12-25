@@ -1,5 +1,6 @@
 "use client";
 
+import LoadingOverlay from "@/components/layout/Loading";
 import Quote from "@/components/Quote";
 import { fetchQuotes } from "@/lib/utils/quotes";
 import { QuoteProps } from "@/types/QuoteProps";
@@ -11,15 +12,21 @@ const images = ["/tj_club.png", "/plakacik_TJ.png", "/tj.jpg"]; // TODO: Replace
 
 export default function Home() {
   const [currentImages, setCurrentImages] = useState(images.slice(0, 3));
-  const [quotes, setQuotes] = useState<QuoteProps[]>([]);
   const [currentQuotes, setCurrentQuotes] = useState<QuoteProps[]>([]);
   const [fade, setFade] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
+  // Fetch quotes
   const loadQuotes = async () => {
-    const fetchedQuotes = await fetchQuotes();
-    setQuotes(fetchedQuotes);
-    setCurrentQuotes(fetchedQuotes.slice(0, 3));
+    try {
+      const fetchedQuotes = await fetchQuotes();
+      setCurrentQuotes(fetchedQuotes.slice(0, 3));
+    } catch (error) {
+      console.error("Error during fetching quotes: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
   useEffect(() => {
     loadQuotes();
@@ -64,6 +71,8 @@ export default function Home() {
 
     return () => clearInterval(interval);
   }, []);
+
+  if (loading) return <LoadingOverlay />;
 
   return (
     <section className="flex flex-col justify-center items-center mt-10 gap-20">

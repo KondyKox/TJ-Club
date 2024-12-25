@@ -3,9 +3,9 @@
 import Link from "next/link";
 import React, { useState } from "react";
 import { Bars3Icon } from "@heroicons/react/24/solid";
-import Button from "./Button";
-import Logo from "./Logo";
-import UserIconCustom from "./UserIconCustom";
+import Button from "../ui/Button";
+import Logo from "../ui/Logo";
+import UserIconCustom from "../ui/UserIconCustom";
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

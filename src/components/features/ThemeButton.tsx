@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import Button from "./Button";
 import useDarkMode from "@/hooks/useDarkMode";
 import { MoonIcon, SunIcon } from "@heroicons/react/24/solid";
+import Button from "../ui/Button";
 
 /**
  * ThemeButton component

@@ -1,11 +1,11 @@
 "use client";
 
-import Footer from "@/components/Footer";
+import Footer from "@/components/layout/Footer";
 import "./globals.css";
-import Navbar from "@/components/Navbar";
-import ThemeButton from "@/components/ThemeButton";
+import Navbar from "@/components/layout/Navbar";
+import ThemeButton from "@/components/features/ThemeButton";
 import { useNosChecker } from "@/hooks/useNosChecker";
-import Modal from "@/components/Modal";
+import Modal from "@/components/ui/Modal";
 
 export default function RootLayout({
   children,

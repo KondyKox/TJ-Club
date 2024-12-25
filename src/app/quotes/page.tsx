@@ -1,8 +1,8 @@
 "use client";
 
-import Button from "@/components/Button";
-import LoadingOverlay from "@/components/Loading";
-import Pagination from "@/components/Pagination";
+import Button from "@/components/ui/Button";
+import LoadingOverlay from "@/components/layout/Loading";
+import Pagination from "@/components/features/Pagination";
 import Quote from "@/components/Quote";
 import useAuth from "@/hooks/useAuth";
 import { getCurrentUser } from "@/lib/auth";

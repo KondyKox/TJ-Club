@@ -1,5 +1,5 @@
 import { EditProfileModalProps } from "@/types/ProfileModalProps";
-import Button from "../Button";
+import Button from "../ui/Button";
 
 // Modal for profile edit
 const EditProfileModal = ({

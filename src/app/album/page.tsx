@@ -3,10 +3,10 @@
 import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
 import { useEffect } from "react";
-import Button from "@/components/Button";
+import Button from "@/components/ui/Button";
 import Image from "next/image";
 import { ImageProps } from "@/types/ImageProps";
-import Likes from "@/components/Likes";
+import Likes from "@/components/features/Likes";
 
 const Album = () => {
   const user = useAuth();

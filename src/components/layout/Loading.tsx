@@ -1,4 +1,4 @@
-import Logo from "./Logo";
+import Logo from "../ui/Logo";
 
 const LoadingOverlay = ({ message = "Ładowanie, nie zesraj się..." }) => {
   return (

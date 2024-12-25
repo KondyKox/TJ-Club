@@ -2,7 +2,7 @@
 
 import { QuoteProps } from "@/types/QuoteProps";
 import Image from "next/image";
-import Likes from "./Likes";
+import Likes from "./features/Likes";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { collections } from "@/lib/firebaseConfig";
 import { getCurrentUser } from "@/lib/auth";
