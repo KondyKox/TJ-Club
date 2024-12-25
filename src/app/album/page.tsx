@@ -4,9 +4,9 @@ import useAuth from "@/hooks/useAuth";
 import { useState } from "react";
 import { useEffect } from "react";
 import Button from "@/components/ui/Button";
-import Image from "next/image";
 import { ImageProps } from "@/types/ImageProps";
-import Likes from "@/components/features/Likes";
+import Pagination from "@/components/features/Pagination";
+import AlbumPost from "@/components/AlbumPost";
 
 const Album = () => {
   const user = useAuth();
@@ -31,6 +31,7 @@ const Album = () => {
   useEffect(() => {
     // fetchImages();
 
+    // ! For testing
     const newImage1: ImageProps = {
       id: "1",
       src: "/tj_club.png",
@@ -88,22 +89,6 @@ const Album = () => {
     setFile(null);
   };
 
-  // Like / Dislike a quote
-  const handleLike = (image: ImageProps) => {
-    console.log(`${image.isLiked ? "Dislike" : "Like"}`);
-    setImages((prev) =>
-      prev.map((img) =>
-        img === image
-          ? {
-              ...img,
-              likes: img.isLiked ? img.likes - 1 : img.likes + 1,
-              isLiked: !img.isLiked,
-            }
-          : img
-      )
-    );
-  };
-
   return (
     <section className="flex flex-col items-center justify-center">
       <h2 className="sub-header">Albumik</h2>
@@ -143,29 +128,15 @@ const Album = () => {
         </form>
       )}
       <div className="flex flex-col justify-center items-center gap-4 mt-10 w-full p-2 overline-top">
-        {images?.map((image) => (
-          <div
-            key={image.id}
-            className="flex flex-col justify-center items-center gap-4 md:w-1/2 gradient-bg p-6 rounded-lg"
-          >
-            <h6 className="image-header">{image.title}</h6>
-            <Image
-              key={image.id}
-              src={image.src}
-              alt={`image.title`}
-              width={1024}
-              height={1024}
-              className="w-full rounded border-b-2 border-akcent"
-            />
-            <div className="flex justify-between items-center gap-2 w-full mt-4">
-              <div className="flex justify-center items-center gap-2">
-                <span>Komentarze</span>
-              </div>
-              {/* Likes */}
-              <Likes element={image} handleLike={() => handleLike(image)} />
+        <Pagination
+          items={images}
+          itemsPerPage={5}
+          renderItem={(image) => (
+            <div key={image.id} className="flex justify-center items-center">
+              <AlbumPost image={image} loadImages={fetchImages} />
             </div>
-          </div>
-        ))}
+          )}
+        />
       </div>
     </section>
   );

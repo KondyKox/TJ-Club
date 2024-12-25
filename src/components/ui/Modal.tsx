@@ -12,10 +12,10 @@ const Modal = ({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex justify-center items-center z-50">
+    <div className="fixed inset-0 flex justify-center items-center z-50 w-full bg-slate-900 bg-opacity-70">
       <div
-        className="group rounded-lg p-16 w-96 flex flex-col justify-center items-center shadow-secondary gradient-bg 
-                    transition-all duration- relative"
+        className="group rounded-lg py-16 px-8 w-96 flex flex-col justify-center items-center shadow-secondary gradient-bg 
+                    transition-all duration-300 relative"
       >
         <button
           onClick={onClose}

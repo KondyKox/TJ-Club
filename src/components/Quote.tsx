@@ -2,10 +2,10 @@
 
 import { QuoteProps } from "@/types/QuoteProps";
 import Likes from "./features/Likes";
-import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
+import { doc } from "firebase/firestore";
 import { collections } from "@/lib/firebaseConfig";
-import { getCurrentUser } from "@/lib/auth";
 import useAuth from "@/hooks/useAuth";
+import { handleLike } from "@/lib/utils/handleLike";
 
 const Quote = ({
   quote,
@@ -14,33 +14,19 @@ const Quote = ({
   quote: QuoteProps;
   loadQuotes: () => void;
 }) => {
-  const user = getCurrentUser();
   const isLoggedIn = useAuth();
 
   // Like / Dislike a quote
-  const handleLike = async (quote: QuoteProps) => {
+  const handleLikeClick = async (quote: QuoteProps) => {
     if (!isLoggedIn) return;
 
     const quoteRef = doc(collections.quotes, quote.id);
 
-    try {
-      if (quote.isLiked) {
-        await updateDoc(quoteRef, {
-          likes: quote.likes - 1,
-          likedBy: user?.uid ? arrayRemove(user?.uid) : false,
-        });
-      } else {
-        await updateDoc(quoteRef, {
-          likes: quote.likes + 1,
-          likedBy: user?.uid ? arrayUnion(user?.uid) : false,
-        });
-      }
-
-      loadQuotes();
-      console.log(`${quote.isLiked ? "Quote disliked" : "Quote liked"}`);
-    } catch (error) {
-      console.error("Error during liking quote: ", error);
-    }
+    await handleLike({
+      item: quote,
+      collectionRef: quoteRef,
+      loadItems: loadQuotes,
+    });
   };
 
   return (
@@ -68,7 +54,7 @@ const Quote = ({
             </span>
           </div>
           {/* Likes */}
-          <Likes element={quote} handleLike={() => handleLike(quote)} />
+          <Likes element={quote} handleLike={() => handleLikeClick(quote)} />
         </div>
       </div>
     </div>
