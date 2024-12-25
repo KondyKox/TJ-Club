@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@/components/Button";
+import LoadingOverlay from "@/components/Loading";
 import Pagination from "@/components/Pagination";
 import Quote from "@/components/Quote";
 import useAuth from "@/hooks/useAuth";
@@ -15,12 +16,19 @@ const Quotes = () => {
   const [quotes, setQuotes] = useState<QuoteProps[]>([]);
   const [newAuthor, setNewAuthor] = useState<string>("");
   const [newContent, setNewContent] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [saving, setSaving] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch quotes
   const loadQuotes = async () => {
-    const fetchedQuotes = await fetchQuotes();
-    setQuotes(fetchedQuotes);
+    try {
+      const fetchedQuotes = await fetchQuotes();
+      setQuotes(fetchedQuotes);
+    } catch (error) {
+      console.error("Error during fetching quotes: ", error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   useEffect(() => {
@@ -33,7 +41,7 @@ const Quotes = () => {
     author: string;
   }) => {
     try {
-      setLoading(true);
+      setSaving(true);
 
       const token = await user?.getIdToken();
 
@@ -52,7 +60,7 @@ const Quotes = () => {
     } catch (error) {
       console.error("Error during adding quote: ", error);
     } finally {
-      setLoading(false);
+      setSaving(false);
     }
   };
 
@@ -71,6 +79,8 @@ const Quotes = () => {
     setNewAuthor("");
     setNewContent("");
   };
+
+  if (loading) return <LoadingOverlay message="Wczytywanie mądrych słów..." />;
 
   return (
     <section
@@ -108,7 +118,7 @@ const Quotes = () => {
               ></textarea>
             </div>
             <Button className="border-2 border-button w-full">
-              {!loading ? "Dodaj cytat" : "Dodawanie..."}
+              {!saving ? "Dodaj cytat" : "Dodawanie..."}
             </Button>
           </form>
         </div>

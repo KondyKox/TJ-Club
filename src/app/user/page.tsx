@@ -1,12 +1,14 @@
 "use client";
 
 import Button from "@/components/Button";
+import LoadingOverlay from "@/components/Loading";
 import Logout from "@/components/Logout";
 import Modal from "@/components/Modal";
 import useUser from "@/hooks/useUser";
 import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 // Fields with user data
 const userFields = [
@@ -14,26 +16,39 @@ const userFields = [
   { label: "Email", key: "email" },
 ];
 
+// User page component
 const UserPage = () => {
   const { userData, loading } = useUser();
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"edit" | "password" | null>(null);
   const [formData, setFormData] = useState({
-    displayName: userData?.displayName || "Brak danych",
-    email: userData?.email || "Brak danych",
+    displayName: "",
+    email: "",
   });
   const [password, setPassword] = useState<string>("");
   const [repPassword, setRepPassword] = useState<string>("");
   const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
+  const router = useRouter();
 
-  // Edit user profile
-  const handleEditClick = () => {
-    setIsModalOpen(true);
-    setModalType("edit");
+  useEffect(() => {
+    // Synchronizacja stanu loading z userData
+    if (!loading && userData) {
+      setFormData({
+        displayName: userData.displayName || "",
+        email: userData.email || "",
+      });
+    }
+  }, [loading, userData]);
+
+  // Toggle modal
+  const toggleModal = (type: "edit" | "password" | null) => {
+    setIsModalOpen(!!type);
+    setModalType(type);
   };
 
+  // Edit user profile
   const handleEditProfile = async () => {
     try {
       setSaving(true);
@@ -54,7 +69,7 @@ const UserPage = () => {
       const result = await response.json();
       if (!response.ok) throw new Error(result.error);
 
-      closeModal();
+      toggleModal(null);
       console.log("Profile updated.");
     } catch (error: any) {
       console.error("Error updating user:", error);
@@ -64,11 +79,6 @@ const UserPage = () => {
   };
 
   // Change user password
-  const changePasswordClick = () => {
-    setIsModalOpen(true);
-    setModalType("password");
-  };
-
   const handleChangePassword = async () => {
     if (password !== repPassword) {
       setError("Hasła się nie zgadzają.");
@@ -95,7 +105,7 @@ const UserPage = () => {
         throw new Error(result.error || "Cannot change password.");
 
       console.log("Password changed.");
-      closeModal();
+      toggleModal(null);
     } catch (error) {
       console.error("Erro changing password:", error);
     } finally {
@@ -103,20 +113,17 @@ const UserPage = () => {
     }
   };
 
-  // Close modal
-  const closeModal = () => {
-    setIsModalOpen(false);
-    setModalType(null);
-  };
-
   // Show / Hide password
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
+  if (loading) return <LoadingOverlay />;
+  if (!userData) router.push("/login");
+
   return (
-    <div className="flex flex-col justify-center items-center w-full mx-auto my-12 gap-2">
-      <div className="lg:w-2/3 w-full gradient-bg p-10 rounded-xl shadow-2xl border-2 border-akcent gap-2">
+    <div className="flex flex-col justify-center items-center w-full mx-auto my-12 gap-2 p-2">
+      <div className="lg:w-2/3 w-full gradient-bg py-4 md:p-10 rounded-xl shadow-2xl border-2 border-akcent gap-2">
         <div className="flex justify-center mb-12">
           <div className="relative w-32 h-32 rounded-full border-4 border-button shadow-lg">
             <Image
@@ -130,35 +137,31 @@ const UserPage = () => {
           </div>
         </div>
 
-        {/* Dane użytkownika */}
-        {loading ? (
-          <h6 className="image-header mb-10">Ładowanie danych...</h6>
-        ) : (
-          <div className="flex flex-col justify-center items-center gap-2 w-full">
-            {userFields.map((field, index) => (
-              <div key={index} className="user-field">
-                <p className="text-md font-semibold">
-                  {field.label}:{" "}
-                  <span className="text-akcent font-bold">
-                    {userData?.[field.key as keyof typeof userData]}
-                  </span>
-                </p>
-              </div>
-            ))}
-          </div>
-        )}
+        {/* User data */}
+        <div className="flex flex-col justify-center items-center gap-2 w-full">
+          {userFields.map((field, index) => (
+            <div key={index} className="user-field">
+              <p className="text-md font-semibold">
+                {field.label}:{" "}
+                <span className="text-akcent font-bold">
+                  {userData?.[field.key as keyof typeof userData]}
+                </span>
+              </p>
+            </div>
+          ))}
+        </div>
 
-        {/* Opcje dla użytkownika */}
+        {/* User options */}
         <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
           <div className="flex justify-center items-center w-full gap-4">
             <Button
-              onClick={() => handleEditClick()}
+              onClick={() => toggleModal("edit")}
               className="border-2 border-button"
             >
               Edytuj Profil
             </Button>
             <Button
-              onClick={() => changePasswordClick()}
+              onClick={() => toggleModal("password")}
               className="border-2 border-button"
             >
               Zmiana Hasła
@@ -169,7 +172,7 @@ const UserPage = () => {
       </div>
 
       {/* Modal for editing profile / password change  */}
-      <Modal isOpen={isModalOpen} onClose={() => closeModal()}>
+      <Modal isOpen={isModalOpen} onClose={() => toggleModal(null)}>
         {modalType === "edit" ? (
           <div className="flex flex-col justify-center items-center gap-4 p-2">
             <h3 className="sub-header">Edycja</h3>
