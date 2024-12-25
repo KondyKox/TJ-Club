@@ -3,7 +3,7 @@
 import { PaginationProps } from "@/types/PaginationProps";
 import { useState } from "react";
 
-const Pagination = <T,>({
+const Pagination = <T extends { [key: string]: any }>({
   items,
   itemsPerPage = 6,
   renderItem,
@@ -15,9 +15,16 @@ const Pagination = <T,>({
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = items.slice(indexOfFirstItem, indexOfLastItem);
 
+  // Check if items are Album Images
+  const isImageProps = currentItems.length > 0 && "src" in currentItems[0];
+
   return (
     <div className="flex flex-col items-center">
-      <div className="grid place-items-center md:grid-cols-2 gap-4">
+      <div
+        className={`grid place-items-center gap-4 ${
+          isImageProps ? "" : "md:grid-cols-2"
+        }`}
+      >
         {currentItems.map((item, index) => (
           <div key={index}>{renderItem(item)}</div>
         ))}

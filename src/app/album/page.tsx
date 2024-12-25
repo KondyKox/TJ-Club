@@ -7,13 +7,15 @@ import Button from "@/components/ui/Button";
 import { ImageProps } from "@/types/ImageProps";
 import Pagination from "@/components/features/Pagination";
 import AlbumPost from "@/components/AlbumPost";
+import LoadingOverlay from "@/components/layout/Loading";
 
 const Album = () => {
   const user = useAuth();
   const [images, setImages] = useState<ImageProps[]>([]);
   const [file, setFile] = useState<string | null>(null);
   const [title, setTitle] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [uploading, setUploading] = useState<boolean>(false);
 
   // Fetch images from the album
   const fetchImages = async () => {
@@ -25,6 +27,8 @@ const Album = () => {
       setImages(data);
     } catch (error) {
       console.error("Error fetching images:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -56,7 +60,7 @@ const Album = () => {
     if (!file) return;
 
     try {
-      setLoading(true);
+      setUploading(true);
 
       const formData = new FormData();
       formData.append("file", file);
@@ -75,7 +79,7 @@ const Album = () => {
     } catch (error: any) {
       console.error("Error uploading image:", error);
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
@@ -89,15 +93,17 @@ const Album = () => {
     setFile(null);
   };
 
+  if (loading) return <LoadingOverlay message="Wczytuję zajebiste fotki..." />;
+
   return (
     <section className="flex flex-col items-center justify-center">
       <h2 className="sub-header">Albumik</h2>
       {user.isLoggedIn && (
         <form
           onSubmit={handleSubmit}
-          className="flex flex-col  justify-center items-center gap-4 p-2"
+          className="flex flex-col  justify-center items-center gap-4 p-2 md:w-1/3"
         >
-          <div className="flex flex-col justify-center items-center gap-2">
+          <div className="flex flex-col justify-center items-center gap-2 w-full">
             <input
               type="text"
               name="title"
@@ -122,7 +128,7 @@ const Album = () => {
               required
             />
           </div>
-          <Button className="border-2 border-button w-full" loading={loading}>
+          <Button className="border-2 border-button w-full" loading={uploading}>
             Dodaj
           </Button>
         </form>
