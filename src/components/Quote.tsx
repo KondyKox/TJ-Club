@@ -1,7 +1,6 @@
 "use client";
 
 import { QuoteProps } from "@/types/QuoteProps";
-import Image from "next/image";
 import Likes from "./features/Likes";
 import { arrayRemove, arrayUnion, doc, updateDoc } from "firebase/firestore";
 import { collections } from "@/lib/firebaseConfig";

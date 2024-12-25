@@ -1,4 +1,4 @@
-"use client"; // For NextJS - indicates it's client-side
+"use client";
 
 import Link from "next/link";
 import React, { useState } from "react";
@@ -27,7 +27,7 @@ const Navbar: React.FC = () => {
             <Button>Album</Button>
           </Link>
           <Link href="/quotes">
-            <Button>Wielkie cytaty</Button>
+            <Button>Mądrości</Button>
           </Link>
           {/* <Link href="/gaming">
             <Button>Gaming</Button>
@@ -62,7 +62,7 @@ const Navbar: React.FC = () => {
           </Link>
           <Link href="/quotes">
             <Button onClick={toggleMenu} className="text-2xl py-1">
-              Wielkie cytaty
+              Mądrości
             </Button>
           </Link>
           {/* <Link href="/gaming">

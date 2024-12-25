@@ -1,17 +1,45 @@
 "use client";
 
+import AlbumSection from "@/components/layout/AlbumSection";
 import LoadingOverlay from "@/components/layout/Loading";
-import Quote from "@/components/Quote";
+import QuotesSection from "@/components/layout/QuotesSection";
 import { fetchQuotes } from "@/lib/utils/quotes";
+import { ImageProps } from "@/types/ImageProps";
 import { QuoteProps } from "@/types/QuoteProps";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 
-const images = ["/tj_club.png", "/plakacik_TJ.png", "/tj.jpg"]; // TODO: Replace with firebase images
+const testImages = [
+  {
+    id: "1",
+    src: "/tj_club.png",
+    title: "Chuj",
+    likes: 0,
+    isLiked: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "2",
+    src: "/plakacik_TJ.png",
+    title: "Chuj",
+    likes: 0,
+    isLiked: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "3",
+    src: "/tj.jpg",
+    title: "Chuj",
+    likes: 0,
+    isLiked: false,
+    createdAt: new Date(),
+  },
+]; // TODO: Replace with firebase images
 
 export default function Home() {
-  const [currentImages, setCurrentImages] = useState(images.slice(0, 3));
+  const [currentImages, setCurrentImages] = useState<ImageProps[]>(
+    testImages.slice(0, 3)
+  );
   const [currentQuotes, setCurrentQuotes] = useState<QuoteProps[]>([]);
   const [fade, setFade] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -83,115 +111,22 @@ export default function Home() {
           alt="Tarnowska Mafia"
           width={512}
           height={512}
-          className="lg:max-w-md xl:max-w-2xl md:w-full p-2 rounded-3xl hover:rounded-none transition-all duration-300 ease-in-out drop-shadow-button"
+          className="lg:max-w-md xl:max-w-2xl md:w-full p-2 rounded-3xl hover:rounded-none transition-all duration-300 
+                      ease-in-out drop-shadow-button"
           priority
         />
       </div>
 
       {/* Album section */}
-      <div className="flex flex-col justify-center items-center w-full overline-top gap-20">
-        <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4">
-          <div className="w-full md:w-1/2 flex flex-col justify-center items-center">
-            <h2 className="sub-header">Tu nasz albumik</h2>
-            <p className="text-sm text-akcent pb-2">
-              Zdjęcia Tarnowskiej Mafii
-            </p>
-          </div>
-          <div className="flex flex-col md:flex-row justify-between items-center w-full md:w-1/2">
-            <div
-              className={`flex ${
-                isDesktop ? "flex-row" : "flex-col"
-              } relative pt-4`}
-            >
-              {currentImages.map((imgSrc, index) => (
-                <Link
-                  href={"/album"}
-                  key={index}
-                  className={`transition-opacity duration-500 ease-in-out ${
-                    fade
-                      ? "opacity-0"
-                      : index === 0
-                      ? "opacity-100"
-                      : "opacity-50"
-                  } ${index === 0 && "drop-shadow-button"}`}
-                  style={{
-                    zIndex: currentImages.length - index,
-                    marginLeft:
-                      isDesktop && index > 0 ? `-${index * 70}px` : "0",
-                    marginTop:
-                      !isDesktop && index > 0 ? `-${index * 70}px` : "0", // mobile
-                  }}
-                >
-                  <Image
-                    src={imgSrc}
-                    alt={`Image ${index + 1}`}
-                    width={256}
-                    height={256}
-                    className="p-2 rounded-3xl"
-                    style={{ aspectRatio: "16/10" }}
-                    loading="lazy"
-                  />
-                </Link>
-              ))}
-            </div>
-          </div>
-        </div>
-        <div className="flex justify-center items-center">
-          <p className="text-xl">
-            Więcej zdjęć na{" "}
-            <Link href={"/album"} className="link">
-              stronie albumu
-            </Link>
-            .
-          </p>
-        </div>
-      </div>
+      <AlbumSection images={currentImages} fade={fade} isDesktop={isDesktop} />
 
-      {/* Quotes */}
-      <div className="flex flex-col justify-center items-center w-full overline-top gap-20">
-        <div className="flex flex-col md:flex-row-reverse justify-around items-center w-full gap-4">
-          <div className="flex flex-col justify-center items-center">
-            <h2 className="sub-header">Cytaty</h2>
-            <p className="text-sm text-akcent pb-2">Cytaty wielkich ludzi</p>
-          </div>
-          <div
-            className={`flex pt-4 ${
-              isDesktop ? "flex-row-reverse" : "flex-col"
-            } relative`}
-          >
-            {currentQuotes.map((quote, index) => (
-              <Link
-                href={"/quotes"}
-                key={quote.id}
-                className={`min-w-72 transition-opacity duration-500 ease-in-out ${
-                  fade
-                    ? "opacity-0"
-                    : index === 0
-                    ? "opacity-100"
-                    : "opacity-50"
-                } ${index === 0 && "drop-shadow-button"}`}
-                style={{
-                  zIndex: currentQuotes.length - index,
-                  marginRight:
-                    isDesktop && index > 0 ? `-${index * 70}px` : "0",
-                  marginTop: !isDesktop && index > 0 ? `-${index * 70}px` : "0", // mobile
-                }}
-              >
-                <Quote quote={currentQuotes[index]} loadQuotes={loadQuotes} />
-              </Link>
-            ))}
-          </div>
-        </div>
-        <div className="flex justify-center items-center p-2">
-          <p className="text-xl text-center">
-            Więcej cytatów na{" "}
-            <Link href={"/quotes"} className="link">
-              stronie wielkich cytatów
-            </Link>
-            .
-          </p>
-        </div>
-      </div>
+      {/* Quotes section */}
+      <QuotesSection
+        quotes={currentQuotes}
+        loadQuotes={loadQuotes}
+        fade={fade}
+        isDesktop={isDesktop}
+      />
 
       {/* TODO:  Dodać inne sekcje, jak będą robione ich strony*/}
     </section>
