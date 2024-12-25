@@ -4,8 +4,9 @@ import Button from "@/components/Button";
 import LoadingOverlay from "@/components/Loading";
 import Logout from "@/components/Logout";
 import Modal from "@/components/Modal";
+import ChangePasswordModal from "@/components/user/ChangePasswordModal";
+import EditProfileModal from "@/components/user/EditProfileModal";
 import useUser from "@/hooks/useUser";
-import { EyeIcon, EyeSlashIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -27,7 +28,6 @@ const UserPage = () => {
   });
   const [password, setPassword] = useState<string>("");
   const [repPassword, setRepPassword] = useState<string>("");
-  const [showPassword, setShowPassword] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
   const router = useRouter();
@@ -72,9 +72,11 @@ const UserPage = () => {
       toggleModal(null);
       console.log("Profile updated.");
     } catch (error: any) {
+      setError(error.message);
       console.error("Error updating user:", error);
     } finally {
       setSaving(false);
+      setError(null);
     }
   };
 
@@ -110,12 +112,8 @@ const UserPage = () => {
       console.error("Erro changing password:", error);
     } finally {
       setSaving(false);
+      setError(null);
     }
-  };
-
-  // Show / Hide password
-  const togglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
   };
 
   if (loading) return <LoadingOverlay />;
@@ -174,72 +172,24 @@ const UserPage = () => {
       {/* Modal for editing profile / password change  */}
       <Modal isOpen={isModalOpen} onClose={() => toggleModal(null)}>
         {modalType === "edit" ? (
-          <div className="flex flex-col justify-center items-center gap-4 p-2">
-            <h3 className="sub-header">Edycja</h3>
-            <div className="flex flex-col justify-center items-center gap-4 mt-4">
-              <div className="flex flex-col justify-center items-center gap-2">
-                {userFields.map((field, index) => (
-                  <input
-                    key={index}
-                    type={field.key === "email" ? "email" : "text"}
-                    className="input"
-                    placeholder={field.label}
-                    value={formData[field.key as keyof typeof formData]}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        [field.key]: e.target.value,
-                      }))
-                    }
-                  />
-                ))}
-              </div>
-              <Button
-                className="border-2 border-button w-full"
-                onClick={() => handleEditProfile()}
-              >
-                {saving ? "Zapisywanie..." : "Zapisz"}
-              </Button>
-              {error && <p className="text-red-500">{error}</p>}
-            </div>
-          </div>
+          <EditProfileModal
+            userFields={userFields}
+            formData={formData}
+            setFormData={setFormData}
+            onSave={handleEditProfile}
+            saving={saving}
+            error={error}
+          />
         ) : (
-          <div className="flex flex-col justify-center items-center gap-4">
-            <h3 className="sub-header">Zmiana hasła</h3>
-            <div className="flex flex-col justify-center items-center gap-2 w-full relative">
-              <input
-                type={showPassword ? "text" : "password"}
-                className="input"
-                placeholder="Nowe hasło"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-              <input
-                type={showPassword ? "text" : "password"}
-                className="input"
-                placeholder="Powtórz hasło"
-                value={repPassword}
-                onChange={(e) => setRepPassword(e.target.value)}
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-2 bottom-2 text-gray-500"
-              >
-                {showPassword ? (
-                  <EyeSlashIcon className="h-6 w-6" />
-                ) : (
-                  <EyeIcon className="h-6 w-6" />
-                )}
-              </button>
-            </div>
-            <Button
-              className="border-2 border-button w-full"
-              onClick={() => handleChangePassword()}
-            >
-              {saving ? "Zapisywanie..." : "Zapisz"}
-            </Button>
-          </div>
+          <ChangePasswordModal
+            password={password}
+            repPassword={repPassword}
+            setPassword={setPassword}
+            setRepPassword={setRepPassword}
+            onSave={handleChangePassword}
+            saving={saving}
+            error={error}
+          />
         )}
       </Modal>
     </div>
