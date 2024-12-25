@@ -73,6 +73,7 @@ const AlbumPostContent = ({
         alt={image.title}
         width={1024}
         height={1024}
+        loading="lazy"
         className="w-full rounded border-b-2 border-akcent transition-all duration-300 ease-in-out hover:scale-150"
       />
       <div className="flex justify-between items-center gap-2 w-full mt-4">

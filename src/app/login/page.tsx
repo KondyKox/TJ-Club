@@ -69,8 +69,8 @@ const Login = () => {
             )}
           </button>
         </div>
-        <Button className="border-2 border-button">
-          {isLoading ? "Logowanie..." : "Zaloguj"}
+        <Button className="border-2 border-button" loading={isLoading}>
+          Zaloguj
         </Button>
         <p className="mt-4 text-center">
           Nie masz konta?{" "}

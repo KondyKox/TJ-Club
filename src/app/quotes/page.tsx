@@ -110,15 +110,15 @@ const Quotes = () => {
                 required
               />
               <textarea
-                placeholder="Dodaj cytat..."
+                placeholder="Kontent..."
                 value={newContent}
                 className="input min-w-full md:min-w-72 min-h-24"
                 onChange={(e) => setNewContent(e.target.value)}
                 required
               ></textarea>
             </div>
-            <Button className="border-2 border-button w-full">
-              {!saving ? "Dodaj cytat" : "Dodawanie..."}
+            <Button className="border-2 border-button w-full" loading={saving}>
+              Dodaj
             </Button>
           </form>
         </div>

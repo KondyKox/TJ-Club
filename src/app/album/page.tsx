@@ -122,8 +122,8 @@ const Album = () => {
               required
             />
           </div>
-          <Button className="border-2 border-button w-full">
-            {loading ? "Dodawanie..." : "Dodaj"}
+          <Button className="border-2 border-button w-full" loading={loading}>
+            Dodaj
           </Button>
         </form>
       )}

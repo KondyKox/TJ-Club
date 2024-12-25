@@ -82,8 +82,8 @@ const Register = () => {
             )}
           </button>
         </div>
-        <Button className="border-2 border-button">
-          {isLoading ? "Rejestracja..." : "Zarejestruj"}
+        <Button className="border-2 border-button" loading={isLoading}>
+          Zarejestruj
         </Button>
         <p className="mt-4 text-center">
           Masz już konto?{" "}

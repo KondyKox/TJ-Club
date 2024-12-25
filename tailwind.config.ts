@@ -25,6 +25,17 @@ const config: Config = {
       boxShadow: {
         secondary: "0 0.5rem 0.5rem var(--clr-secondary)",
       },
+      keyframes: {
+        dots: {
+          "0%, 20%": { opacity: "0" },
+          "50%": { opacity: "1" },
+        },
+      },
+      animation: {
+        "dots-1": "dots 1.4s infinite",
+        "dots-2": "dots 1.4s infinite 0.2s",
+        "dots-3": "dots 1.4s infinite 0.4s",
+      },
     },
   },
   plugins: [],

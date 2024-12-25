@@ -55,8 +55,9 @@ const ChangePasswordModal = ({
       <Button
         className="border-2 border-button w-full"
         onClick={() => onSave()}
+        loading={saving}
       >
-        {saving ? "Zapisywanie..." : "Zapisz"}
+        Zapisz
       </Button>
       {error && <p className="text-red-500">{error}</p>}
     </div>

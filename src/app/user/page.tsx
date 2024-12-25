@@ -46,6 +46,7 @@ const UserPage = () => {
   const toggleModal = (type: "edit" | "password" | null) => {
     setIsModalOpen(!!type);
     setModalType(type);
+    setError(null);
   };
 
   // Edit user profile
@@ -76,7 +77,6 @@ const UserPage = () => {
       console.error("Error updating user:", error);
     } finally {
       setSaving(false);
-      setError(null);
     }
   };
 
@@ -108,7 +108,8 @@ const UserPage = () => {
 
       console.log("Password changed.");
       toggleModal(null);
-    } catch (error) {
+    } catch (error: any) {
+      setError(error.message);
       console.error("Erro changing password:", error);
     } finally {
       setSaving(false);
