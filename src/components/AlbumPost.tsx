@@ -65,7 +65,7 @@ const AlbumPostContent = ({
 }) => {
   return (
     <div className="flex flex-col justify-center items-center gap-4 w-full">
-      <h6 className="image-header">{image.title}</h6>
+      <h6 className="header-sm">{image.title}</h6>
       {/* TODO: Add image author here */}
       <Image
         key={image.id}

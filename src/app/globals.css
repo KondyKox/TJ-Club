@@ -51,7 +51,7 @@ h6 {
 .sub-header {
   @apply text-4xl md:text-6xl lg:text-7xl text-center;
 }
-.image-header {
+.header-sm {
   @apply text-3xl md:text-4xl lg:text-5xl text-center;
 }
 

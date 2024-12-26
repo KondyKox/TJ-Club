@@ -71,7 +71,7 @@ const FriendsList = () => {
   return (
     <div className="w-full flex flex-col justify-center items-center">
       <div className="underline-custom w-full flex flex-col justify-center items-center gap-2 px-4 sticky top-0 z-10">
-        <h3 className="image-header">Znajomi</h3>
+        <h3 className="header-sm">Znajomi</h3>
         <div className="flex justify-center items-center gap-2 w-full">
           <input
             type="text"
