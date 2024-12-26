@@ -173,7 +173,7 @@ const UserPage = () => {
           </div>
         </div>
         {/* Friends */}
-        <div className="panel lg:w-1/3 flex flex-col justify-center items-center">
+        <div className="panel lg:w-1/3 flex flex-col items-center">
           <FriendsList />
         </div>
       </section>

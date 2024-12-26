@@ -1,13 +1,22 @@
 "use client";
 
 import { getCurrentUser } from "@/lib/auth";
-import { addFriend, fetchFriends, searchUsers } from "@/lib/utils/friends";
+import {
+  addFriend,
+  fetchFriends,
+  removeFriend,
+  searchUsers,
+} from "@/lib/utils/friends";
 import { ProfileProps } from "@/types/ProfileProps";
 import { ReactNode, useEffect, useState } from "react";
 import LoadingOverlay from "../layout/Loading";
 import Image from "next/image";
 import Button from "../ui/Button";
-import { MagnifyingGlassIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import {
+  MagnifyingGlassIcon,
+  MinusCircleIcon,
+  UserPlusIcon,
+} from "@heroicons/react/24/solid";
 
 const FriendsList = () => {
   const [friends, setFriends] = useState<ProfileProps[]>([]);
@@ -16,6 +25,7 @@ const FriendsList = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [searching, setSearching] = useState<boolean>(false);
   const [adding, setAdding] = useState<boolean>(false);
+  const [removing, setRemoving] = useState<boolean>(false);
   const currentUser = getCurrentUser();
 
   // Load friends list
@@ -36,13 +46,18 @@ const FriendsList = () => {
     loadFriends();
   }, []);
 
+  // Reset search results when search query is empty
+  useEffect(() => {
+    if (!searchQuery) setSearchResults([]);
+  }, [searchQuery]);
+
   // Search for people
   const handleSearch = async () => {
-    if (!searchQuery) return;
+    if (!searchQuery || !currentUser) return;
     try {
       setSearching(true);
 
-      const results = await searchUsers(searchQuery);
+      const results = await searchUsers(searchQuery, currentUser.uid);
       setSearchResults(results);
     } catch (error: any) {
       console.error("Error searching users:", error);
@@ -58,11 +73,36 @@ const FriendsList = () => {
       if (!currentUser) return;
 
       await addFriend(currentUser.uid, friendUid);
+
+      const updatedFriends = await fetchFriends(currentUser.uid);
+      setFriends(updatedFriends);
+
+      setSearchResults([]);
+      setSearchQuery("");
+
       console.log("Friend added!");
     } catch (error: any) {
       console.error("Error adding friend:", error);
     } finally {
       setAdding(false);
+    }
+  };
+
+  // Remove friend
+  const handleRemoveFriend = async (friendUid: string) => {
+    if (!currentUser?.uid) return;
+
+    try {
+      setRemoving(true);
+
+      await removeFriend(currentUser.uid, friendUid);
+      setFriends((prevFriends) =>
+        prevFriends.filter((friend) => friend.uid !== friendUid)
+      );
+    } catch (error) {
+      console.error("Błąd podczas usuwania znajomego:", error);
+    } finally {
+      setRemoving(false);
     }
   };
 
@@ -87,12 +127,14 @@ const FriendsList = () => {
       </div>
       {/* Search results list */}
       {searchResults.length > 0 ? (
-        <ul className="flex flex-col justify-center items-center gap-2 py-4">
+        <ul className="flex flex-col justify-center items-center gap-2 py-6 w-full">
           {searchResults.map((user, index) => (
             <ListContent user={user} key={index}>
               <Button
                 onClick={() => handleAddFriend(user.uid)}
                 loading={adding}
+                noHover={true}
+                className="hover:text-green-500"
               >
                 <UserPlusIcon className="h-6 w-6" />
               </Button>
@@ -101,9 +143,18 @@ const FriendsList = () => {
         </ul>
       ) : // Friends list
       friends.length > 0 ? (
-        <ul className="flex flex-col justify-center items-center gap-2 py-4">
+        <ul className="flex flex-col justify-center items-center gap-2 py-6 w-full">
           {friends.map((friend, index) => (
-            <ListContent user={friend} key={index} />
+            <ListContent user={friend} key={index}>
+              <Button
+                onClick={() => handleRemoveFriend(friend.uid)}
+                loading={removing}
+                noHover={true}
+                className="hover:text-red"
+              >
+                <MinusCircleIcon className="h-6 w-6" />
+              </Button>
+            </ListContent>
           ))}
         </ul>
       ) : (
@@ -124,15 +175,18 @@ const ListContent = ({
   children?: ReactNode;
 }) => {
   return (
-    <li className="flex justify-between items-center gap-2 underline-custom py-2">
-      <Image
-        src={user.profilePicture || "/ano_vodka.svg"}
-        alt={user.username}
-        width={64}
-        height={64}
-        loading="lazy"
-      />
-      <span className="text-akcent">{user.username}</span>
+    <li className="flex justify-between items-center gap-2 border-2 border-button rounded w-full p-2">
+      <div className="flex justify-center items-center gap-4">
+        <Image
+          src={user.profilePicture || "/ano_vodka.svg"}
+          alt={user.username}
+          width={64}
+          height={64}
+          loading="lazy"
+          className="w-12 h-12"
+        />
+        <span className="text-akcent">{user.username}</span>
+      </div>
       {children}
     </li>
   );

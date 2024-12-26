@@ -1,4 +1,5 @@
 import {
+  arrayRemove,
   arrayUnion,
   doc,
   getDoc,
@@ -44,26 +45,62 @@ export const fetchFriends = async (userUid: string) => {
   }
 };
 
-// Search new friend
-export const searchUsers = async (searchQuery: string) => {
-  const q = query(
-    collections.users,
-    where("username", ">=", searchQuery),
-    where("username", "<=", searchQuery + "\uf8ff")
-  );
-  const querySnapshot = await getDocs(q);
+// Search users by username or ID
+export const searchUsers = async (searchQuery: string, currentUid: string) => {
+  try {
+    // Pobierz dokument obecnego użytkownika, żeby sprawdzić jego znajomych
+    const currentUserDoc = await getDoc(doc(collections.users, currentUid));
+    const currentUserData = currentUserDoc.data();
+    const currentFriends = currentUserData?.friends || [];
 
-  // Map results to ProfileProps
-  return querySnapshot.docs.map((doc) => {
-    const data = doc.data();
-    return {
-      uid: doc.id, // Doc ID is the same as user UID
-      username: data.username || "",
-      email: data.email || "",
-      profilePicture: data.profilePicture || "",
-      friends: data.friends || [],
-    } as ProfileProps;
-  });
+    // Query by username
+    const usernameQuery = query(
+      collections.users,
+      where("username", ">=", searchQuery),
+      where("username", "<=", searchQuery + "\uf8ff")
+    );
+
+    // Query by ID
+    const idQuery = query(
+      collections.users,
+      where("uid", ">=", searchQuery),
+      where("uid", "<=", searchQuery + "\uf8ff")
+    );
+
+    // Pobierz wyniki dla obu zapytań
+    const [usernameSnapshot, idSnapshot] = await Promise.all([
+      getDocs(usernameQuery),
+      getDocs(idQuery),
+    ]);
+
+    // Map results to ProfileProps
+    const results = [...usernameSnapshot.docs, ...idSnapshot.docs].map(
+      (doc) => {
+        const data = doc.data();
+        return {
+          uid: doc.id, // Doc ID is the same as user UID
+          username: data.username || "",
+          email: data.email || "",
+          profilePicture: data.profilePicture || "",
+          friends: data.friends || [],
+        } as ProfileProps;
+      }
+    );
+
+    // Filter results
+    const uniqueResults = results
+      .filter((user) => user.uid !== currentUid) // Delete current user
+      .filter((user) => !currentFriends.includes(user.uid)) // Delete friends
+      .filter(
+        (value, index, self) =>
+          index === self.findIndex((u) => u.uid === value.uid) // Delete duplicats
+      );
+
+    return uniqueResults;
+  } catch (error) {
+    console.error("Error searching users:", error);
+    return [];
+  }
 };
 
 // Add new friend
@@ -78,4 +115,26 @@ export const addFriend = async (userUid: string, friendUid: string) => {
   await updateDoc(friendUserRef, {
     friends: arrayUnion(userUid),
   });
+};
+
+// Remove friend
+export const removeFriend = async (userUid: string, friendUid: string) => {
+  try {
+    const currentUserRef = doc(collections.users, userUid);
+    const friendUserRef = doc(collections.users, friendUid);
+
+    // Remove friend from current user
+    await updateDoc(currentUserRef, {
+      friends: arrayRemove(friendUid),
+    });
+
+    // Remove current user from friend
+    await updateDoc(friendUserRef, {
+      friends: arrayRemove(userUid),
+    });
+
+    console.log(`Friend ${friendUid} removed.`);
+  } catch (error: any) {
+    console.error("Error removing friend:", error);
+  }
 };
