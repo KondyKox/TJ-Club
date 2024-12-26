@@ -89,13 +89,13 @@ const Quotes = () => {
     >
       {/* Header */}
       <div className="flex flex-col justify-center items-center">
-        <h2 className="sub-header">Cytaty Tarnowskich Mafiozów</h2>
+        <h2 className="sub-header">Mądre mądrości</h2>
         <span className="text-gray-600 text-sm">(są zajebiste)</span>
       </div>
 
       {/* Add quote form */}
       {isLoggedIn && (
-        <div className="flex flex-col justify-center items-center gap-4 w-full md:w-1/2">
+        <div className="flex flex-col justify-center items-center gap-4 w-full md:w-1/3">
           <form
             onSubmit={handleSubmit}
             className="flex flex-col justify-center items-center gap-4 p-4 w-full"
@@ -125,15 +125,17 @@ const Quotes = () => {
       )}
 
       {/* Quotes */}
-      <Pagination
-        items={quotes}
-        itemsPerPage={6}
-        renderItem={(quote) => (
-          <div key={quote.id} className="min-w-72 md:min-w-96">
-            <Quote quote={quote} loadQuotes={loadQuotes} />
-          </div>
-        )}
-      />
+      <div className="flex flex-col justify-center items-center gap-4 mt-4 w-full p-2 overline-top">
+        <Pagination
+          items={quotes}
+          itemsPerPage={6}
+          renderItem={(quote) => (
+            <div key={quote.id} className="min-w-72 md:min-w-96">
+              <Quote quote={quote} loadQuotes={loadQuotes} />
+            </div>
+          )}
+        />
+      </div>
     </section>
   );
 };

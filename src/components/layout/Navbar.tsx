@@ -49,38 +49,31 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu */}
       {isOpen && (
-        <div className="fixed inset-0 bg-opacity-90 z-40 flex flex-col justify-center items-center space-y-4 bg-primary">
-          <div className="relative flex flex-col items-center">
-            <Logo />
-            <span className="underline-custom mt-8"></span>
-          </div>
+        <div className="fixed inset-0 bg-opacity-90 z-40 flex flex-col justify-center items-center gap-8 bg-primary">
+          <Logo />
+          <span className="overline-top w-1/2"></span>
 
-          <Link href="/album">
-            <Button onClick={toggleMenu} className="text-2xl py-1">
-              Album
-            </Button>
-          </Link>
-          <Link href="/quotes">
-            <Button onClick={toggleMenu} className="text-2xl py-1">
-              Mądrości
-            </Button>
-          </Link>
-          {/* <Link href="/gaming">
+          <div className="flex flex-col justify-center items-center gap-2">
+            <Link href="/album">
+              <Button onClick={toggleMenu} className="text-2xl py-1">
+                Album
+              </Button>
+            </Link>
+            <Link href="/quotes">
+              <Button onClick={toggleMenu} className="text-2xl py-1">
+                Mądrości
+              </Button>
+            </Link>
+            {/* <Link href="/gaming">
             <Button onClick={toggleMenu} className="text-2xl py-1">
               Gaming
             </Button>
           </Link> */}
+          </div>
 
           {/* User icon */}
-          <UserIconCustom>
-            <Button
-              onClick={toggleMenu}
-              noHover={true}
-              className="mb-4 relative"
-            >
-              <span className="underline-custom"></span>
-            </Button>
-          </UserIconCustom>
+          <span className="underline-custom w-1/2"></span>
+          <UserIconCustom />
         </div>
       )}
     </nav>

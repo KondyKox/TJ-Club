@@ -81,7 +81,7 @@ h6 {
     position: absolute;
     top: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
+    transform: translateX(-50%) translateY(-10px);
     width: 90%;
     height: 2px;
     background-color: theme("colors.secondary");
@@ -91,15 +91,15 @@ h6 {
 /* Underline for mobile menu */
 @layer utilities {
   .underline-custom {
-    position: relative;
+    @apply relative py-2;
   }
   .underline-custom::before {
     content: "";
     position: absolute;
-    top: 0;
+    bottom: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(-8px);
-    width: 120px;
+    transform: translateX(-50%) translateY(10px);
+    width: 90%;
     height: 2px;
     background-color: var(--clr-secondary);
   }
