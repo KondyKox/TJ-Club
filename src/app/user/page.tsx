@@ -10,11 +10,13 @@ import useUser from "@/hooks/useUser";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import FriendsList from "@/components/user/FriendsList";
 
 // Fields with user data
 const userFields = [
   { label: "Wyświetlana nazwa", key: "displayName" },
   { label: "Email", key: "email" },
+  { label: "ID", key: "uid" },
 ];
 
 // User page component
@@ -121,54 +123,60 @@ const UserPage = () => {
   if (!userData) router.push("/login");
 
   return (
-    <div className="flex flex-col justify-center items-center w-full mx-auto my-12 gap-2 p-2">
-      <div className="lg:w-2/3 w-full gradient-bg py-4 md:p-10 rounded-xl shadow-2xl border-2 border-akcent gap-2">
-        <div className="flex justify-center mb-12">
-          <div className="relative w-32 h-32 rounded-full border-4 border-button shadow-lg">
-            <Image
-              src={userData?.photoURL || "/ano_vodka.svg"}
-              alt="Zdjęcie profilowe"
-              width={64}
-              height={64}
-              className="w-28 h-28 rounded-full absolute top-1 left-1 shadow-secondary border-1 border-button 
+    <>
+      <section className="flex flex-col lg:flex-row justify-center items-stretch w-full mx-auto my-12 gap-2 md:gap-6 p-2">
+        <div className="lg:w-1/2 panel">
+          <div className="flex justify-center mb-12">
+            <div className="relative w-32 h-32 rounded-full border-4 border-button shadow-lg">
+              <Image
+                src={userData?.photoURL || "/ano_vodka.svg"}
+                alt="Zdjęcie profilowe"
+                width={64}
+                height={64}
+                className="w-28 h-28 rounded-full absolute top-1 left-1 shadow-secondary border-1 border-button 
                           hover:drop-shadow-button duration-300 ease-in-out"
-            />
-          </div>
-        </div>
-
-        {/* User data */}
-        <div className="flex flex-col justify-center items-center gap-2 w-full">
-          {userFields.map((field, index) => (
-            <div key={index} className="user-field">
-              <p className="text-md font-semibold">
-                {field.label}:{" "}
-                <span className="text-akcent font-bold">
-                  {userData?.[field.key as keyof typeof userData]}
-                </span>
-              </p>
+              />
             </div>
-          ))}
-        </div>
-
-        {/* User options */}
-        <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
-          <div className="flex justify-center items-center w-full gap-4">
-            <Button
-              onClick={() => toggleModal("edit")}
-              className="border-2 border-button"
-            >
-              Edytuj Profil
-            </Button>
-            <Button
-              onClick={() => toggleModal("password")}
-              className="border-2 border-button"
-            >
-              Zmiana Hasła
-            </Button>
           </div>
-          <Logout />
+
+          {/* User data */}
+          <div className="flex flex-col justify-center items-center gap-2 w-full">
+            {userFields.map((field, index) => (
+              <div key={index} className="user-field">
+                <p className="text-sm md:text-lg font-semibold">
+                  {field.label}:{" "}
+                  <span className="text-akcent font-bold">
+                    {userData?.[field.key as keyof typeof userData]}
+                  </span>
+                </p>
+              </div>
+            ))}
+          </div>
+
+          {/* User options */}
+          <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
+            <div className="flex justify-center items-center w-full gap-4">
+              <Button
+                onClick={() => toggleModal("edit")}
+                className="border-2 border-button"
+              >
+                Edytuj Profil
+              </Button>
+              <Button
+                onClick={() => toggleModal("password")}
+                className="border-2 border-button"
+              >
+                Zmiana Hasła
+              </Button>
+            </div>
+            <Logout />
+          </div>
         </div>
-      </div>
+        {/* Friends */}
+        <div className="panel lg:w-1/3 flex flex-col justify-center items-center">
+          <FriendsList />
+        </div>
+      </section>
 
       {/* Modal for editing profile / password change  */}
       <Modal isOpen={isModalOpen} onClose={() => toggleModal(null)}>
@@ -193,7 +201,7 @@ const UserPage = () => {
           />
         )}
       </Modal>
-    </div>
+    </>
   );
 };
 

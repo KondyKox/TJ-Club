@@ -68,7 +68,10 @@ h6 {
 
 /* User page elements */
 .user-field {
-  @apply p-4 rounded-lg border-2 border-gray-600 shadow-md bg-gray-800 flex justify-between items-center w-full max-w-[90%];
+  @apply py-4 px-2 rounded-lg border-2 border-gray-600 shadow-md bg-gray-800 flex justify-between items-center w-full max-w-[90%];
+}
+.panel {
+  @apply w-full gradient-bg py-4 md:p-10 rounded-xl shadow-2xl border-2 border-akcent gap-2;
 }
 
 /* Overline for sections */

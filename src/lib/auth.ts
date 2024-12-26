@@ -5,7 +5,8 @@ import {
   signOut,
   updateProfile,
 } from "firebase/auth";
-import { firebase } from "./firebaseConfig";
+import { collections, firebase } from "./firebaseConfig";
+import { doc, setDoc } from "firebase/firestore";
 
 // Register user to firebase
 export const registerUser = async (
@@ -20,11 +21,22 @@ export const registerUser = async (
       password
     );
 
-    await updateProfile(userCredential.user, {
-      displayName: username,
+    const user = userCredential.user;
+
+    await updateProfile(user, {
+      displayName: username.trim(),
     });
 
-    return userCredential.user;
+    // Add user to firebase collection
+    await setDoc(doc(collections.users, user.uid), {
+      uid: user.uid,
+      username: username.trim(),
+      email: user.email,
+      profilePicture: user.photoURL || "",
+      friends: [],
+    });
+
+    return user;
   } catch (error: any) {
     throw new Error(error.message);
   }

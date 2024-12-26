@@ -21,8 +21,7 @@ export const firebase = {
 };
 
 export const collections = {
+  users: collection(firebase.db, "users"),
   album: collection(firebase.db, "album"),
   quotes: collection(firebase.db, "quotes"),
-  likes: collection(firebase.db, "likes"),
-  comments: collection(firebase.db, "comments"),
 };
