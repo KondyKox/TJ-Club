@@ -91,7 +91,17 @@ export default function Home() {
   return (
     <section className="flex flex-col justify-center items-center mt-10 gap-20">
       <div className="flex flex-col lg:flex-row justify-center items-center gap-2 md:gap-12">
-        <h1 className="header">Tarnowska Mafia</h1>
+        <div className="relative">
+          <h1 className="header z-10 relative">Tarnowska Mafia</h1>
+          <Image
+            src={"/kondy.svg"}
+            alt="Jezus"
+            width={300}
+            height={300}
+            priority
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-70"
+          />
+        </div>
         <Image
           src={"/tj.jpg"}
           alt="Tarnowska Mafia"

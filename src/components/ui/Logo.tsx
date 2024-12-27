@@ -13,6 +13,7 @@ const Logo: React.FC = () => {
           alt="Logo"
           width={120}
           height={60}
+          priority
         />
       </Link>
     </div>
