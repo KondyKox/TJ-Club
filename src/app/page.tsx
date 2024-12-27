@@ -3,43 +3,15 @@
 import AlbumSection from "@/components/layout/AlbumSection";
 import LoadingOverlay from "@/components/layout/Loading";
 import QuotesSection from "@/components/layout/QuotesSection";
+import { getImages } from "@/lib/utils/album";
 import { fetchQuotes } from "@/lib/utils/quotes";
 import { ImageProps } from "@/types/ImageProps";
 import { QuoteProps } from "@/types/QuoteProps";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const testImages = [
-  {
-    id: "1",
-    src: "/tj_club.png",
-    title: "Chuj",
-    likes: 0,
-    isLiked: false,
-    createdAt: new Date(),
-  },
-  {
-    id: "2",
-    src: "/plakacik_TJ.png",
-    title: "Chuj",
-    likes: 0,
-    isLiked: false,
-    createdAt: new Date(),
-  },
-  {
-    id: "3",
-    src: "/tj.jpg",
-    title: "Chuj",
-    likes: 0,
-    isLiked: false,
-    createdAt: new Date(),
-  },
-]; // TODO: Replace with firebase images
-
 export default function Home() {
-  const [currentImages, setCurrentImages] = useState<ImageProps[]>(
-    testImages.slice(0, 3)
-  );
+  const [currentImages, setCurrentImages] = useState<ImageProps[]>([]);
   const [currentQuotes, setCurrentQuotes] = useState<QuoteProps[]>([]);
   const [fade, setFade] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
@@ -56,8 +28,22 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  // Fetch images
+  const loadImages = async () => {
+    try {
+      const fetchedImages = await getImages();
+      setCurrentImages(fetchedImages.slice(0, 3));
+    } catch (error) {
+      console.error("Error during fetching quotes: ", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
     loadQuotes();
+    loadImages();
   }, []);
 
   useEffect(() => {

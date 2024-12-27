@@ -15,7 +15,6 @@ export async function GET() {
       return {
         id: doc.id,
         content: data.content as string,
-        imageUrl: data.image as string | null,
         author: data.author as string,
         createdAt:
           data.createdAt instanceof Date

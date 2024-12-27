@@ -8,11 +8,12 @@ import { ImageProps } from "@/types/ImageProps";
 import Pagination from "@/components/features/Pagination";
 import AlbumPost from "@/components/AlbumPost";
 import LoadingOverlay from "@/components/layout/Loading";
+import { getImages, uploadImage } from "@/lib/utils/album";
 
 const Album = () => {
-  const user = useAuth();
+  const isLoggedIn = useAuth();
   const [images, setImages] = useState<ImageProps[]>([]);
-  const [file, setFile] = useState<string | null>(null);
+  const [file, setFile] = useState<File | null>(null);
   const [title, setTitle] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(true);
   const [uploading, setUploading] = useState<boolean>(false);
@@ -20,10 +21,7 @@ const Album = () => {
   // Fetch images from the album
   const fetchImages = async () => {
     try {
-      const response = await fetch("/api/album");
-      if (!response.ok) throw new Error("Error fetching images");
-
-      const data = await response.json();
+      const data = await getImages();
       setImages(data);
     } catch (error) {
       console.error("Error fetching images:", error);
@@ -33,26 +31,7 @@ const Album = () => {
   };
 
   useEffect(() => {
-    // fetchImages();
-
-    // ! For testing
-    const newImage1: ImageProps = {
-      id: "1",
-      src: "/tj_club.png",
-      title: "Test1",
-      likes: 1,
-      isLiked: false,
-      createdAt: new Date(),
-    };
-    const newImage2: ImageProps = {
-      id: "2",
-      src: "/tj_club.png",
-      title: "Test2",
-      likes: 1,
-      isLiked: false,
-      createdAt: new Date(),
-    };
-    setImages([newImage1, newImage2]);
+    fetchImages();
   }, []);
 
   // Upload new image to the album
@@ -62,21 +41,10 @@ const Album = () => {
     try {
       setUploading(true);
 
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch("/api/album", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(`Error: ${JSON.stringify(errorData)}`);
-      }
+      await uploadImage(file, title);
 
       await fetchImages();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error uploading image:", error);
     } finally {
       setUploading(false);
@@ -98,7 +66,7 @@ const Album = () => {
   return (
     <section className="flex flex-col items-center justify-center">
       <h2 className="sub-header">Albumik</h2>
-      {user.isLoggedIn && (
+      {isLoggedIn && (
         <form
           onSubmit={handleSubmit}
           className="flex flex-col  justify-center items-center gap-4 p-2 md:w-1/3"
@@ -116,15 +84,11 @@ const Album = () => {
             <input
               type="file"
               name="file"
-              // value={newImage || ""} // TODO: Fix this
               className="input"
               onChange={(e) => {
                 const file = e.target.files?.[0];
-                if (file) setFile(URL.createObjectURL(file));
+                if (file) setFile(file);
               }}
-              // onChange={(e) =>
-              //   setFile(e.target.files ? e.target.files[0] : null)
-              // }
               required
             />
           </div>
