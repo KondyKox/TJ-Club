@@ -47,6 +47,29 @@ export const fetchFriends = async (userUid: string) => {
   }
 };
 
+// Search user by UID
+export const searchUserById = async (uid: string) => {
+  try {
+    const userDoc = await getDoc(doc(collections.users, uid));
+
+    if (userDoc.exists()) {
+      const data = userDoc.data();
+      return {
+        uid: userDoc.id,
+        username: data.username || "",
+        email: data.email || "",
+        profilePicture: data.profilePicture || "",
+        friends: data.friends || [],
+      };
+    }
+
+    return null; // User not found
+  } catch (error) {
+    console.error("Error fetching user by UID:", error);
+    return null;
+  }
+};
+
 // Search users by username or ID
 export const searchUsers = async (searchQuery: string, currentUid: string) => {
   try {

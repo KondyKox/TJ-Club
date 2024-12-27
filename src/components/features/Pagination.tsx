@@ -26,7 +26,9 @@ const Pagination = <T extends { [key: string]: any }>({
         }`}
       >
         {currentItems.map((item, index) => (
-          <div key={index}>{renderItem(item)}</div>
+          <div key={index} className="w-full">
+            {renderItem(item)}
+          </div>
         ))}
       </div>
 

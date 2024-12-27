@@ -8,7 +8,8 @@ import { collections } from "@/lib/firebaseConfig";
 import { doc } from "firebase/firestore";
 import { handleLike } from "@/lib/utils/handleLike";
 import Modal from "./ui/Modal";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { searchUserById } from "@/lib/utils/friends";
 
 const AlbumPost = ({
   image,
@@ -42,14 +43,21 @@ const AlbumPost = ({
     <>
       <div
         key={image.id}
-        onClick={handlePostClick}
-        className="flex flex-col justify-center items-center gap-4 md:w-1/2 gradient-bg p-6 rounded-lg cursor-pointer"
+        className="flex flex-col justify-center items-center gap-4 md:w-2/3 gradient-bg p-6 rounded-lg cursor-pointer"
       >
-        <AlbumPostContent image={image} handleLikeClick={handleLikeClick} />
+        <AlbumPostContent
+          image={image}
+          handleLikeClick={handleLikeClick}
+          handlePostClick={handlePostClick}
+        />
       </div>
       {/* Modal with image data */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <AlbumPostContent image={image} handleLikeClick={handleLikeClick} />
+        <AlbumPostContent
+          image={image}
+          handleLikeClick={handleLikeClick}
+          handlePostClick={handlePostClick}
+        />
       </Modal>
     </>
   );
@@ -59,14 +67,34 @@ const AlbumPost = ({
 const AlbumPostContent = ({
   image,
   handleLikeClick,
+  handlePostClick,
 }: {
   image: ImageProps;
   handleLikeClick: (image: ImageProps) => void;
+  handlePostClick: () => void;
 }) => {
+  const [author, setAuthor] = useState<string>("");
+
+  // Pobierz dane autora na podstawie `uid`
+  useEffect(() => {
+    const fetchAuthor = async () => {
+      if (!image.author) return;
+
+      const imgAuthor = await searchUserById(image.author);
+      setAuthor(imgAuthor?.username);
+    };
+
+    fetchAuthor();
+
+    fetchAuthor();
+  }, [image.author]);
+
   return (
     <div className="flex flex-col justify-center items-center gap-4 w-full">
-      <h6 className="header-sm">{image.title}</h6>
-      {/* TODO: Add image author here */}
+      <div className="flex flex-col justify-center items-center pb-2">
+        <h6 className="header-sm">{image.title}</h6>
+        <span className="text-akcent">{author}</span>
+      </div>
       <Image
         key={image.id}
         src={image.src}
@@ -74,6 +102,7 @@ const AlbumPostContent = ({
         width={1024}
         height={1024}
         loading="lazy"
+        onClick={handlePostClick}
         className="w-full rounded border-b-2 border-akcent transition-all duration-300 ease-in-out hover:scale-150"
       />
       <div className="flex justify-between items-center gap-2 w-full mt-4">

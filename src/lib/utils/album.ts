@@ -3,12 +3,20 @@ import { getCurrentUser } from "../auth";
 
 // Get all images from Firestore
 export const getImages = async () => {
+  const user = getCurrentUser();
+
   const response = await fetch("/api/album");
   const data: ImageProps[] = await response.json();
 
   if (!response.ok) throw new Error("Failed to fetch images");
 
-  return data;
+  // Check if user liked an image
+  const updatedImages = data.map((image) => ({
+    ...image,
+    isLiked: user?.uid ? image.likedBy.includes(user?.uid) : false,
+  }));
+
+  return updatedImages;
 };
 
 // Upload new image

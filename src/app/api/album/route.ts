@@ -15,7 +15,7 @@ export async function GET() {
       const data = doc.data();
       return {
         id: doc.id,
-        author: data.content as string,
+        author: data.addedBy as string,
         src: data.src as string,
         title: data.title as string,
         createdAt:
