@@ -8,20 +8,18 @@ import ChangePasswordModal from "@/components/user/ChangePasswordModal";
 import EditProfileModal from "@/components/user/EditProfileModal";
 import useUser from "@/hooks/useUser";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import FriendsList from "@/components/user/FriendsList";
-
-// Fields with user data
-const userFields = [
-  { label: "Wyświetlana nazwa", key: "displayName" },
-  { label: "Email", key: "email" },
-  { label: "ID", key: "uid" },
-];
+import { userFields } from "../constants";
+import { getCurrentUser } from "@/lib/auth";
 
 // User page component
 const UserPage = () => {
-  const { userData, loading } = useUser();
+  const params = useParams();
+  const profileId = Array.isArray(params.id) ? params.id[0] : params.id;
+  const { userData, loading } = useUser(profileId);
+
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"edit" | "password" | null>(null);
   const [formData, setFormData] = useState({
@@ -33,6 +31,9 @@ const UserPage = () => {
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState<boolean>(false);
   const router = useRouter();
+  const user = getCurrentUser();
+
+  const isOwnProfile = profileId === user?.uid;
 
   useEffect(() => {
     // Synchronizacja stanu loading z userData
@@ -154,27 +155,30 @@ const UserPage = () => {
           </div>
 
           {/* User options */}
-          <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
-            <div className="flex justify-center items-center w-full gap-4">
-              <Button
-                onClick={() => toggleModal("edit")}
-                className="border-2 border-button"
-              >
-                Edytuj Profil
-              </Button>
-              <Button
-                onClick={() => toggleModal("password")}
-                className="border-2 border-button"
-              >
-                Zmiana Hasła
-              </Button>
+          {isOwnProfile && (
+            <div className="flex flex-col justify-center items-center gap-4 overline-top mt-10">
+              <div className="flex justify-center items-center w-full gap-4">
+                <Button
+                  onClick={() => toggleModal("edit")}
+                  className="border-2 border-button"
+                >
+                  Edytuj Profil
+                </Button>
+                <Button
+                  onClick={() => toggleModal("password")}
+                  className="border-2 border-button"
+                >
+                  Zmiana Hasła
+                </Button>
+              </div>
+              <Logout />
             </div>
-            <Logout />
-          </div>
+          )}
         </div>
+
         {/* Friends */}
         <div className="panel lg:w-1/3 flex flex-col items-center">
-          <FriendsList />
+          <FriendsList isOwnProfile={isOwnProfile} />
         </div>
       </section>
 

@@ -15,10 +15,13 @@ import Button from "../ui/Button";
 import {
   MagnifyingGlassIcon,
   MinusCircleIcon,
+  UserIcon,
   UserPlusIcon,
 } from "@heroicons/react/24/solid";
+import Link from "next/link";
+import { useParams } from "next/navigation";
 
-const FriendsList = () => {
+const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
   const [friends, setFriends] = useState<ProfileProps[]>([]);
   const [searchResults, setSearchResults] = useState<ProfileProps[]>([]);
   const [searchQuery, setSearchQuery] = useState<string>("");
@@ -27,14 +30,14 @@ const FriendsList = () => {
   const [adding, setAdding] = useState<boolean>(false);
   const [removing, setRemoving] = useState<boolean>(false);
   const currentUser = getCurrentUser();
+  const params = useParams();
+  const profileId = Array.isArray(params.id) ? params.id[0] : params.id;
 
   // Load friends list
   useEffect(() => {
     const loadFriends = async () => {
       try {
-        if (!currentUser) return;
-
-        const friendsData = await fetchFriends(currentUser.uid);
+        const friendsData = await fetchFriends(profileId);
         setFriends(friendsData);
       } catch (error: any) {
         console.error("Error loading friends:", error);
@@ -112,18 +115,20 @@ const FriendsList = () => {
     <div className="w-full flex flex-col justify-center items-center">
       <div className="underline-custom w-full flex flex-col justify-center items-center gap-2 px-4 sticky top-0 z-10">
         <h3 className="header-sm">Znajomi</h3>
-        <div className="flex justify-center items-center gap-2 w-full">
-          <input
-            type="text"
-            placeholder="Wyszukaj ludzi (ID lub nazwa)..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="input max-w-96"
-          />
-          <Button onClick={handleSearch} loading={searching}>
-            <MagnifyingGlassIcon className="h-6 w-6" />
-          </Button>
-        </div>
+        {isOwnProfile && (
+          <div className="flex justify-center items-center gap-2 w-full">
+            <input
+              type="text"
+              placeholder="Wyszukaj ludzi (ID lub nazwa)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="input max-w-96"
+            />
+            <Button onClick={handleSearch} loading={searching}>
+              <MagnifyingGlassIcon className="h-6 w-6" />
+            </Button>
+          </div>
+        )}
       </div>
       {/* Search results list */}
       {searchResults.length > 0 ? (
@@ -133,6 +138,7 @@ const FriendsList = () => {
           actionIcon={<UserPlusIcon className="h-6 w-6" />}
           actionLoading={adding}
           actionType="add"
+          isOwnProfile={isOwnProfile}
         />
       ) : // Friends list
       friends.length > 0 ? (
@@ -142,6 +148,7 @@ const FriendsList = () => {
           actionIcon={<MinusCircleIcon className="h-6 w-6" />}
           actionLoading={removing}
           actionType="remove"
+          isOwnProfile={isOwnProfile}
         />
       ) : (
         <p className="pt-8 font-bold text-xl text-red text-center">
@@ -159,12 +166,14 @@ const ListContent = ({
   actionIcon,
   actionLoading,
   actionType,
+  isOwnProfile,
 }: {
   users: ProfileProps[];
   onAction: (userUid: string) => void;
   actionIcon: ReactNode;
   actionLoading: boolean;
   actionType: "add" | "remove";
+  isOwnProfile: boolean;
 }) => {
   return (
     <ul className="flex flex-col items-center gap-2 p-6 w-full max-h-[400px] overflow-y-auto">
@@ -184,16 +193,27 @@ const ListContent = ({
             />
             <span className="text-akcent">{user.username}</span>
           </div>
-          <Button
-            onClick={() => onAction(user.uid)}
-            loading={actionLoading}
-            noHover={true}
-            className={`hover:${
-              actionType === "add" ? "text-green-500" : "text-red"
-            }`}
-          >
-            {actionIcon}
-          </Button>
+          <div className="flex justify-center items-center">
+            <Link href={`/user/${user.uid}`} passHref>
+              <Button noHover className="hover:text-interaction">
+                <UserIcon className="w-6 h-6" />
+              </Button>
+            </Link>
+            {isOwnProfile && (
+              <Button
+                onClick={() => onAction(user.uid)}
+                loading={actionLoading}
+                noHover={true}
+                className={`${
+                  actionType === "add"
+                    ? "hover:text-green-500"
+                    : "hover:text-red"
+                }`}
+              >
+                {actionIcon}
+              </Button>
+            )}
+          </div>
         </li>
       ))}
     </ul>

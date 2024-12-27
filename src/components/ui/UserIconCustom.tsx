@@ -3,13 +3,13 @@ import React from "react";
 import Button from "./Button";
 import { UserIcon } from "@heroicons/react/24/solid";
 import UserIconProps from "@/types/UserIconProps";
-import useAuth from "@/hooks/useAuth";
+import { getCurrentUser } from "@/lib/auth";
 
 const UserIconCustom: React.FC<UserIconProps> = ({ children, onClick }) => {
-  const { isLoggedIn } = useAuth();
+  const user = getCurrentUser();
 
   return (
-    <Link href={isLoggedIn ? "/user" : "/login"}>
+    <Link href={user ? `/user/${user.uid}` : "/login"}>
       <Button
         onClick={onClick}
         noHover={true}
