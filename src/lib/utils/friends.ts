@@ -38,7 +38,9 @@ export const fetchFriends = async (userUid: string) => {
       })
     );
 
-    return friendsData.filter(Boolean) as ProfileProps[];
+    return friendsData
+      .filter((friend): friend is ProfileProps => friend !== null)
+      .sort((a, b) => a.username.localeCompare(b.username));
   } catch (error: any) {
     console.error("Error fetching friends:", error);
     return [];

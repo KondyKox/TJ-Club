@@ -127,36 +127,22 @@ const FriendsList = () => {
       </div>
       {/* Search results list */}
       {searchResults.length > 0 ? (
-        <ul className="flex flex-col justify-center items-center gap-2 py-6 w-full">
-          {searchResults.map((user, index) => (
-            <ListContent user={user} key={index}>
-              <Button
-                onClick={() => handleAddFriend(user.uid)}
-                loading={adding}
-                noHover={true}
-                className="hover:text-green-500"
-              >
-                <UserPlusIcon className="h-6 w-6" />
-              </Button>
-            </ListContent>
-          ))}
-        </ul>
+        <ListContent
+          users={searchResults}
+          onAction={handleAddFriend}
+          actionIcon={<UserPlusIcon className="h-6 w-6" />}
+          actionLoading={adding}
+          actionType="add"
+        />
       ) : // Friends list
       friends.length > 0 ? (
-        <ul className="flex flex-col justify-center items-center gap-2 py-6 w-full">
-          {friends.map((friend, index) => (
-            <ListContent user={friend} key={index}>
-              <Button
-                onClick={() => handleRemoveFriend(friend.uid)}
-                loading={removing}
-                noHover={true}
-                className="hover:text-red"
-              >
-                <MinusCircleIcon className="h-6 w-6" />
-              </Button>
-            </ListContent>
-          ))}
-        </ul>
+        <ListContent
+          users={friends}
+          onAction={handleRemoveFriend}
+          actionIcon={<MinusCircleIcon className="h-6 w-6" />}
+          actionLoading={removing}
+          actionType="remove"
+        />
       ) : (
         <p className="pt-8 font-bold text-xl text-red text-center">
           Nie masz znajomych 😢
@@ -168,27 +154,49 @@ const FriendsList = () => {
 
 // Item list component
 const ListContent = ({
-  user,
-  children,
+  users,
+  onAction,
+  actionIcon,
+  actionLoading,
+  actionType,
 }: {
-  user: ProfileProps;
-  children?: ReactNode;
+  users: ProfileProps[];
+  onAction: (userUid: string) => void;
+  actionIcon: ReactNode;
+  actionLoading: boolean;
+  actionType: "add" | "remove";
 }) => {
   return (
-    <li className="flex justify-between items-center gap-2 border-2 border-button rounded w-full p-2">
-      <div className="flex justify-center items-center gap-4">
-        <Image
-          src={user.profilePicture || "/ano_vodka.svg"}
-          alt={user.username}
-          width={64}
-          height={64}
-          loading="lazy"
-          className="w-12 h-12"
-        />
-        <span className="text-akcent">{user.username}</span>
-      </div>
-      {children}
-    </li>
+    <ul className="flex flex-col items-center gap-2 p-6 w-full max-h-[400px] overflow-y-auto">
+      {users.map((user) => (
+        <li
+          key={user.uid}
+          className="flex justify-between items-center gap-2 border-2 border-button rounded w-full p-2"
+        >
+          <div className="flex justify-center items-center gap-4">
+            <Image
+              src={user.profilePicture || "/ano_vodka.svg"}
+              alt={user.username}
+              width={64}
+              height={64}
+              loading="lazy"
+              className="w-12 h-12"
+            />
+            <span className="text-akcent">{user.username}</span>
+          </div>
+          <Button
+            onClick={() => onAction(user.uid)}
+            loading={actionLoading}
+            noHover={true}
+            className={`hover:${
+              actionType === "add" ? "text-green-500" : "text-red"
+            }`}
+          >
+            {actionIcon}
+          </Button>
+        </li>
+      ))}
+    </ul>
   );
 };
 
