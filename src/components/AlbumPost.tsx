@@ -10,6 +10,7 @@ import { handleLike } from "@/lib/utils/handleLike";
 import Modal from "./ui/Modal";
 import { useEffect, useState } from "react";
 import { searchUserById } from "@/lib/utils/friends";
+import Comments from "./features/Comments";
 
 const AlbumPost = ({
   image,
@@ -43,7 +44,7 @@ const AlbumPost = ({
     <>
       <div
         key={image.id}
-        className="flex flex-col justify-center items-center gap-4 md:w-2/3 gradient-bg p-6 rounded-lg cursor-pointer"
+        className="flex flex-col justify-center items-center gap-4 gradient-bg p-6 rounded-lg"
       >
         <AlbumPostContent
           image={image}
@@ -103,16 +104,12 @@ const AlbumPostContent = ({
         height={1024}
         loading="lazy"
         onClick={handlePostClick}
-        className="w-full rounded border-b-2 border-akcent transition-all duration-300 ease-in-out hover:scale-150"
+        className="w-full rounded border-b-2 border-akcent transition-all duration-300 ease-in-out hover:scale-150 cursor-pointer"
       />
-      <div className="flex justify-between items-center gap-2 w-full mt-4">
-        <div className="flex justify-center items-center gap-2">
-          <span className="transition-all duration-300 ease-in-out hover:text-interaction cursor-pointer">
-            Komentarze
-          </span>
-        </div>
-        {/* Likes */}
-        <Likes element={image} handleLike={() => handleLikeClick(image)} />
+      <div className="flex justify-between items-center gap-2 w-full mt-4 border-t-2 border-interaction">
+        <Comments imageId={image.id}>
+          <Likes element={image} handleLike={() => handleLikeClick(image)} />
+        </Comments>
       </div>
     </div>
   );

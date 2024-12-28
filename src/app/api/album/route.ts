@@ -1,5 +1,6 @@
 import { adminAuth } from "@/lib/firebaseAdmin";
 import { collections, firebase } from "@/lib/firebaseConfig";
+import { CommentProps } from "@/types/CommentProps";
 import { addDoc, getDocs, orderBy, query } from "firebase/firestore";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { NextRequest, NextResponse } from "next/server";
@@ -18,12 +19,13 @@ export async function GET() {
         author: data.addedBy as string,
         src: data.src as string,
         title: data.title as string,
+        comments: data.comments as CommentProps[],
+        likes: data.likes as number,
+        likedBy: data.likedBy || [],
         createdAt:
           data.createdAt instanceof Date
             ? data.createdAt
             : new Date(data.createdAt.seconds * 1000),
-        likes: data.likes as number,
-        likedBy: data.likedBy || [],
       };
     });
 
@@ -63,6 +65,7 @@ export async function POST(req: NextRequest) {
       src: fileURL,
       createdAt: new Date(),
       addedBy: uid,
+      comments: [],
       likes: 0,
       likedBy: [],
     });
