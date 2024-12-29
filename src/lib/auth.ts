@@ -30,7 +30,7 @@ export const registerUser = async (
     // Add user to firebase collection
     await setDoc(doc(collections.users, user.uid), {
       uid: user.uid,
-      username: username.trim(),
+      displayName: username.trim(),
       email: user.email,
       profilePicture: user.photoURL || "",
       friends: [],
