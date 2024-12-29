@@ -3,7 +3,7 @@
 import Footer from "@/components/layout/Footer";
 import "./globals.css";
 import Navbar from "@/components/layout/Navbar";
-import ThemeButton from "@/components/features/ThemeButton";
+// import ThemeButton from "@/components/features/ThemeButton";
 import { useNosChecker } from "@/hooks/useNosChecker";
 import Modal from "@/components/ui/Modal";
 
@@ -20,8 +20,8 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <title>Tarnowska Mafia</title>
       </head>
-      <body className="bg-primary text-secondary dark:bg-secondary dark:text-primary">
-        <ThemeButton />
+      <body className="bg-primary text-secondary">
+        {/* <ThemeButton /> */}
         <Navbar />
         <main>{children}</main>
 

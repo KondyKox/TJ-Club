@@ -3,10 +3,10 @@
 @tailwind utilities;
 
 :root {
-  --clr-primary: #f7f9fc;
-  --clr-secondary: #151717;
+  --clr-secondary: #f7f9fc;
+  --clr-primary: #151717;
   --clr-interaction: rgb(31 41 55 0.8);
-  --clr-header: #2c3e50;
+  --clr-header: #d3c1af;
   --clr-button: #50e3c2;
   --clr-akcent: #4a90e2;
   --clr-red: #e74c3c;
@@ -18,15 +18,6 @@
   src: url("/fonts/BebasNeue-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --clr-primary: #151717;
-    --clr-secondary: #f7f9fc;
-    --clr-interaction: rgba(234, 179, 8, 0.8);
-    --clr-header: #d3c1af;
-  }
 }
 
 body {

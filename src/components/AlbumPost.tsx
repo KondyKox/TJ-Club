@@ -82,7 +82,7 @@ const AlbumPostContent = ({
       if (!image.author) return;
 
       const imgAuthor = await searchUserById(image.author);
-      setAuthor(imgAuthor?.username);
+      setAuthor(imgAuthor?.displayName);
     };
 
     fetchAuthor();

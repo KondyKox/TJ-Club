@@ -185,13 +185,13 @@ const ListContent = ({
           <div className="flex justify-center items-center gap-4">
             <Image
               src={user.profilePicture || "/ano_vodka.svg"}
-              alt={user.username}
+              alt={user.displayName}
               width={64}
               height={64}
               loading="lazy"
               className="w-12 h-12"
             />
-            <span className="text-akcent">{user.username}</span>
+            <span className="text-akcent">{user.displayName}</span>
           </div>
           <div className="flex justify-center items-center">
             <Link href={`/user/${user.uid}`} passHref>
