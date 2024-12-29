@@ -23,8 +23,9 @@ const Album = () => {
     try {
       const data = await getImages();
       setImages(data);
-    } catch (error) {
-      console.error("Error fetching images:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error fetching images:", error);
     } finally {
       setLoading(false);
     }
@@ -44,8 +45,9 @@ const Album = () => {
       await uploadImage(file, title);
 
       await fetchImages();
-    } catch (error) {
-      console.error("Error uploading image:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error uploading image:", error);
     } finally {
       setUploading(false);
     }

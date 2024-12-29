@@ -39,8 +39,9 @@ const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
       try {
         const friendsData = await fetchFriends(profileId);
         setFriends(friendsData);
-      } catch (error: any) {
-        console.error("Error loading friends:", error);
+      } catch (error: unknown) {
+        if (error instanceof Error)
+          console.error("Error loading friends:", error);
       } finally {
         setLoading(false);
       }
@@ -62,8 +63,9 @@ const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
 
       const results = await searchUsers(searchQuery, currentUser.uid);
       setSearchResults(results);
-    } catch (error: any) {
-      console.error("Error searching users:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error searching users:", error);
     } finally {
       setSearching(false);
     }
@@ -84,8 +86,8 @@ const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
       setSearchQuery("");
 
       console.log("Friend added!");
-    } catch (error: any) {
-      console.error("Error adding friend:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) console.error("Error adding friend:", error);
     } finally {
       setAdding(false);
     }
@@ -102,8 +104,9 @@ const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
       setFriends((prevFriends) =>
         prevFriends.filter((friend) => friend.uid !== friendUid)
       );
-    } catch (error) {
-      console.error("Błąd podczas usuwania znajomego:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Błąd podczas usuwania znajomego:", error);
     } finally {
       setRemoving(false);
     }

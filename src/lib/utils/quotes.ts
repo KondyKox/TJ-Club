@@ -20,8 +20,9 @@ export const fetchQuotes = async () => {
       (a, b) =>
         new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
     );
-  } catch (error) {
-    console.error("Error during fetching quotes: ", error);
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      console.error("Error during fetching quotes: ", error);
     return [];
   }
 };

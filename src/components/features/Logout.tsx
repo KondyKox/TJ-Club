@@ -15,8 +15,8 @@ const Logout = () => {
       await logoutUser();
       console.log("Logout successful!");
       router.push("/");
-    } catch (err: any) {
-      console.error("Logout error:", err.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) console.error("Logout error:", error.message);
     } finally {
       setLoading(false);
     }

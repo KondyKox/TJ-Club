@@ -21,8 +21,9 @@ const useUser = (uid: string) => {
       };
 
       setUserData(mappedUserData);
-    } catch (error) {
-      console.error("Error fetching user data:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error fetching user data:", error);
     }
 
     setLoading(false);

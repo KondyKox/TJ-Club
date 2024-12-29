@@ -30,9 +30,11 @@ export async function GET() {
     });
 
     return NextResponse.json(images);
-  } catch (error: any) {
-    console.error("Error during getting images: ", error);
-    return NextResponse.error();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error during getting images: ", error);
+      return NextResponse.error();
+    }
   }
 }
 
@@ -72,11 +74,13 @@ export async function POST(req: NextRequest) {
 
     console.log("Added image with ID: ", docRef.id);
     return NextResponse.json({ id: docRef.id, src: fileURL });
-  } catch (error: any) {
-    console.error("Error uploading image:", error);
-    return NextResponse.json(
-      { error: "Failed to add image", details: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error uploading image:", error);
+      return NextResponse.json(
+        { error: "Failed to add image", details: error.message },
+        { status: 500 }
+      );
+    }
   }
 }

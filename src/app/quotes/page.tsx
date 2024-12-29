@@ -24,8 +24,9 @@ const Quotes = () => {
     try {
       const fetchedQuotes = await fetchQuotes();
       setQuotes(fetchedQuotes);
-    } catch (error) {
-      console.error("Error during fetching quotes: ", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error during fetching quotes: ", error);
     } finally {
       setLoading(false);
     }
@@ -57,8 +58,9 @@ const Quotes = () => {
       if (!response.ok) throw new Error("Failed to add quote.");
 
       await loadQuotes();
-    } catch (error) {
-      console.error("Error during adding quote: ", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error during adding quote: ", error);
     } finally {
       setSaving(false);
     }

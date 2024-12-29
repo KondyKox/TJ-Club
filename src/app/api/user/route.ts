@@ -37,11 +37,13 @@ export async function POST(req: NextRequest) {
     });
 
     return NextResponse.json({ success: true, profilePicture });
-  } catch (error: any) {
-    console.error("Error updating user:", error);
-    return NextResponse.json(
-      { error: "Failed to update user", details: error.message },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error updating user:", error);
+      return NextResponse.json(
+        { error: "Failed to update user", details: error.message },
+        { status: 500 }
+      );
+    }
   }
 }

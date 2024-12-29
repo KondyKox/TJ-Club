@@ -22,8 +22,9 @@ export default function Home() {
     try {
       const fetchedQuotes = await fetchQuotes();
       setCurrentQuotes(fetchedQuotes.slice(0, 3));
-    } catch (error) {
-      console.error("Error during fetching quotes: ", error);
+    } catch (error: unknown) {
+      if (error instanceof Error)
+        console.error("Error during fetching quotes: ", error);
     } finally {
       setLoading(false);
     }

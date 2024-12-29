@@ -39,7 +39,8 @@ export const handleLike = async ({
 
     loadItems();
     console.log(`${item.isLiked ? "Item disliked" : "Item liked"}`);
-  } catch (error) {
-    console.error("Error during liking element: ", error);
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      console.error("Error during liking element: ", error);
   }
 };

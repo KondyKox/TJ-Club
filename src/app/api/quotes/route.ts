@@ -26,9 +26,11 @@ export async function GET() {
     });
 
     return NextResponse.json(quotes);
-  } catch (error: any) {
-    console.error("Error during getting quotes: ", error);
-    return NextResponse.error();
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.error("Error during getting quotes: ", error);
+      return NextResponse.error();
+    }
   }
 }
 
@@ -57,7 +59,11 @@ export async function POST(req: Request) {
 
     console.log("Added quote with ID: ", docRef.id);
     return NextResponse.json({ id: docRef.id });
-  } catch (error: any) {
-    return NextResponse.json({ error: "Failed to add quote" }, { status: 500 });
+  } catch (error: unknown) {
+    if (error instanceof Error)
+      return NextResponse.json(
+        { error: "Failed to add quote" },
+        { status: 500 }
+      );
   }
 }

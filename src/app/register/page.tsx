@@ -29,8 +29,8 @@ const Register = () => {
       console.log("User logged in.");
 
       router.push("/");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
     } finally {
       setIsLoading(false);
     }

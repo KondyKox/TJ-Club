@@ -68,8 +68,8 @@ const UserPage = () => {
       await refreshUserData();
 
       console.log("Profile updated.");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
       console.error("Error updating user:", error);
     } finally {
       setSaving(false);

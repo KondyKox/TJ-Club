@@ -27,7 +27,7 @@ const Comments = ({
       if (!userData?.uid) return;
 
       const user = await searchUserById(userData.uid);
-      setAuthor(user?.username || null);
+      setAuthor(user?.displayName || null);
     };
 
     fetchAuthor();
@@ -61,8 +61,8 @@ const Comments = ({
       ]);
 
       setNewComment("");
-    } catch (error) {
-      console.error("Error adding comment:", error);
+    } catch (error: unknown) {
+      if (error instanceof Error) console.error("Error adding comment:", error);
     }
   };
 
