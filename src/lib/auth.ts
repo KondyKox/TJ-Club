@@ -51,8 +51,8 @@ export const loginUser = async (email: string, password: string) => {
       password
     );
     return userCredential.user;
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) throw new Error(error.message);
   }
 };
 
@@ -60,8 +60,8 @@ export const loginUser = async (email: string, password: string) => {
 export const logoutUser = async () => {
   try {
     await signOut(firebase.auth);
-  } catch (error: any) {
-    throw new Error(error.message);
+  } catch (error: unknown) {
+    if (error instanceof Error) throw new Error(error.message);
   }
 };
 

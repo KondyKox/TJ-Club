@@ -1,9 +1,11 @@
 "use client";
 
+import { ImageProps } from "@/types/ImageProps";
 import { PaginationProps } from "@/types/PaginationProps";
+import { QuoteProps } from "@/types/QuoteProps";
 import { useState } from "react";
 
-const Pagination = <T extends { [key: string]: any }>({
+const Pagination = <T extends QuoteProps | ImageProps>({
   items,
   itemsPerPage = 6,
   renderItem,

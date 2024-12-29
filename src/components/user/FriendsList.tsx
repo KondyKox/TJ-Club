@@ -48,7 +48,7 @@ const FriendsList = ({ isOwnProfile }: { isOwnProfile: boolean }) => {
     };
 
     loadFriends();
-  }, []);
+  }, [profileId]);
 
   // Reset search results when search query is empty
   useEffect(() => {

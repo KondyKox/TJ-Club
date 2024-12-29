@@ -14,7 +14,7 @@ const useUser = (uid: string) => {
       const userProfile = await searchUserById(uid);
       // Mapowanie danych z ProfileProps na UserData
       const mappedUserData: UserData = {
-        uid: userProfile?.uid!,
+        uid: userProfile?.uid || "JakisBladCzyInnyChuj",
         displayName: userProfile?.displayName, // Zmieniamy "username" na "displayName"
         email: userProfile?.email,
         photoURL: userProfile?.profilePicture, // Zmieniamy "profilePicture" na "photoURL"

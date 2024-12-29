@@ -87,11 +87,16 @@ const UserPage = () => {
     try {
       setSaving(true);
 
-      await changeUserPassword(userData?.uid!, password);
+      if (!userData?.uid) {
+        setError("Nie znaleziono identyfikatora użytkownika.");
+        return;
+      }
+      await changeUserPassword(userData.uid, password);
+
       toggleModal(null);
       console.log("Password changed.");
-    } catch (error: any) {
-      setError(error.message);
+    } catch (error: unknown) {
+      if (error instanceof Error) setError(error.message);
       console.error("Erro changing password:", error);
     } finally {
       setSaving(false);

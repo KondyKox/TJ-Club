@@ -41,8 +41,8 @@ export const fetchFriends = async (userUid: string) => {
     return friendsData
       .filter((friend): friend is ProfileProps => friend !== null)
       .sort((a, b) => a.displayName.localeCompare(b.displayName));
-  } catch (error: any) {
-    console.error("Error fetching friends:", error);
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error("Error fetching friends:", error);
     return [];
   }
 };
@@ -159,7 +159,7 @@ export const removeFriend = async (userUid: string, friendUid: string) => {
     });
 
     console.log(`Friend ${friendUid} removed.`);
-  } catch (error: any) {
-    console.error("Error removing friend:", error);
+  } catch (error: unknown) {
+    if (error instanceof Error) console.error("Error removing friend:", error);
   }
 };

@@ -34,7 +34,7 @@ const Quote = ({
       {/* Quote content */}
       <div className="flex flex-col gap-2 w-full max-w-1/2">
         <p className="text-akcent font-bold italic text-wrap text-sm md:text-lg">
-          "{quote.content}"
+          &quot;{quote.content}&quot;
         </p>
         <div className="flex justify-between items-center w-full">
           <span className="text-gray-500 text-xs md:text-sm">

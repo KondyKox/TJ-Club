@@ -17,7 +17,7 @@ const useDarkMode = () => {
 
   useEffect(() => {
     setIsMounted(true);
-  });
+  }, []);
 
   useEffect(() => {
     if (!isMounted) return;
