@@ -59,7 +59,7 @@ const ChangePasswordModal = ({
       >
         Zapisz
       </Button>
-      {error && <p className="text-red-500">{error}</p>}
+      {error && <p className="text-red text-center">{error}</p>}
     </div>
   );
 };

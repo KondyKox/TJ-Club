@@ -28,7 +28,7 @@ export const fetchFriends = async (userUid: string) => {
           const data = friendDoc.data();
           return {
             uid: friendDoc.id,
-            username: data.username || "",
+            displayName: data.displayName || "",
             email: data.email || "",
             profilePicture: data.profilePicture || "",
             friends: data.friends || [],
@@ -40,7 +40,7 @@ export const fetchFriends = async (userUid: string) => {
 
     return friendsData
       .filter((friend): friend is ProfileProps => friend !== null)
-      .sort((a, b) => a.username.localeCompare(b.username));
+      .sort((a, b) => a.displayName.localeCompare(b.displayName));
   } catch (error: any) {
     console.error("Error fetching friends:", error);
     return [];
@@ -56,7 +56,7 @@ export const searchUserById = async (uid: string) => {
       const data = userDoc.data();
       return {
         uid: userDoc.id,
-        username: data.username || "",
+        displayName: data.displayName || "",
         email: data.email || "",
         profilePicture: data.profilePicture || "",
         friends: data.friends || [],
@@ -81,8 +81,8 @@ export const searchUsers = async (searchQuery: string, currentUid: string) => {
     // Query by username
     const usernameQuery = query(
       collections.users,
-      where("username", ">=", searchQuery),
-      where("username", "<=", searchQuery + "\uf8ff")
+      where("displayName", ">=", searchQuery),
+      where("displayName", "<=", searchQuery + "\uf8ff")
     );
 
     // Query by ID
@@ -104,7 +104,7 @@ export const searchUsers = async (searchQuery: string, currentUid: string) => {
         const data = doc.data();
         return {
           uid: doc.id, // Doc ID is the same as user UID
-          username: data.username || "",
+          displayName: data.displayName || "",
           email: data.email || "",
           profilePicture: data.profilePicture || "",
           friends: data.friends || [],

@@ -13,19 +13,21 @@ import { useEffect, useState } from "react";
 import FriendsList from "@/components/user/FriendsList";
 import { userFields } from "../constants";
 import { getCurrentUser } from "@/lib/auth";
+import { changeUserPassword, editUserProfile } from "@/lib/utils/user";
 
 // User page component
 const UserPage = () => {
   const params = useParams();
   const profileId = Array.isArray(params.id) ? params.id[0] : params.id;
-  const { userData, loading } = useUser(profileId);
-
+  const { userData, loading, refreshUserData } = useUser(profileId);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [modalType, setModalType] = useState<"edit" | "password" | null>(null);
   const [formData, setFormData] = useState({
     displayName: "",
     email: "",
+    photoURL: "",
   });
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [password, setPassword] = useState<string>("");
   const [repPassword, setRepPassword] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
@@ -41,6 +43,7 @@ const UserPage = () => {
       setFormData({
         displayName: userData.displayName || "",
         email: userData.email || "",
+        photoURL: userData.photoURL || "",
       });
     }
   }, [loading, userData]);
@@ -57,23 +60,13 @@ const UserPage = () => {
     try {
       setSaving(true);
 
-      const response = await fetch("/api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: userData?.uid,
-          displayName: formData.displayName,
-          email: formData.email,
-          photoURL: userData?.photoURL, // TODO: Not implemented yet
-        }),
-      });
+      const token = await user?.getIdToken();
+      if (!token) throw new Error("No token available");
 
-      const result = await response.json();
-      if (!response.ok) throw new Error(result.error);
-
+      await editUserProfile(userData, formData, selectedFile, token);
       toggleModal(null);
+      await refreshUserData();
+
       console.log("Profile updated.");
     } catch (error: any) {
       setError(error.message);
@@ -94,23 +87,9 @@ const UserPage = () => {
     try {
       setSaving(true);
 
-      const response = await fetch("/api/user", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uid: userData?.uid,
-          password,
-        }),
-      });
-
-      const result = await response.json();
-      if (!response.ok)
-        throw new Error(result.error || "Cannot change password.");
-
-      console.log("Password changed.");
+      await changeUserPassword(userData?.uid!, password);
       toggleModal(null);
+      console.log("Password changed.");
     } catch (error: any) {
       setError(error.message);
       console.error("Erro changing password:", error);
@@ -132,10 +111,9 @@ const UserPage = () => {
               <Image
                 src={userData?.photoURL || "/ano_vodka.svg"}
                 alt="Zdjęcie profilowe"
-                width={64}
-                height={64}
-                className="w-28 h-28 rounded-full absolute top-1 left-1 shadow-secondary border-1 border-button 
-                          hover:drop-shadow-button duration-300 ease-in-out"
+                width={128}
+                height={128}
+                className="profile-picture"
               />
             </div>
           </div>
@@ -189,6 +167,7 @@ const UserPage = () => {
             userFields={userFields}
             formData={formData}
             setFormData={setFormData}
+            setSelectedFile={setSelectedFile}
             onSave={handleEditProfile}
             saving={saving}
             error={error}

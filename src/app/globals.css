@@ -73,6 +73,9 @@ h6 {
 .panel {
   @apply w-full gradient-bg py-4 md:p-10 rounded-xl shadow-2xl border-2 border-akcent gap-2;
 }
+.profile-picture {
+  @apply w-28 h-28 rounded-full absolute top-1 left-1 shadow-secondary border border-button hover:drop-shadow-button duration-300 ease-in-out;
+}
 
 /* Overline for sections */
 @layer utilities {

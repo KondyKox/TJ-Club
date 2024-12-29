@@ -96,10 +96,10 @@ export default function Home() {
           <Image
             src={"/kondy.svg"}
             alt="Jezus"
-            width={300}
-            height={300}
+            width={256}
+            height={256}
             priority
-            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-70"
+            className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-70 w-32 md:w-72"
           />
         </div>
         <Image

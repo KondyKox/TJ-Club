@@ -1,6 +1,6 @@
 export interface ProfileProps {
   uid: string;
-  username: string;
+  displayName: string;
   email: string;
   profilePicture: string;
   friends: string[];

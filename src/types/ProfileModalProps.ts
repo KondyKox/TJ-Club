@@ -1,10 +1,15 @@
 // Edit profile modal props
 export interface EditProfileModalProps {
   userFields: { label: string; key: string }[];
-  formData: { displayName: string; email: string };
+  formData: { displayName: string; email: string; photoURL: string };
   setFormData: React.Dispatch<
-    React.SetStateAction<{ displayName: string; email: string }>
+    React.SetStateAction<{
+      displayName: string;
+      email: string;
+      photoURL: string;
+    }>
   >;
+  setSelectedFile: React.Dispatch<React.SetStateAction<File | null>>;
   onSave: () => void;
   saving: boolean;
   error: string | null;
