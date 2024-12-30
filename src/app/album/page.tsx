@@ -99,12 +99,15 @@ const Album = () => {
           </Button>
         </form>
       )}
-      <div className="flex flex-col justify-center items-center gap-4 mt-10 w-full p-2 overline-top">
+      <div className="flex flex-col justify-center items-center gap-4 mt-10 w-full md:w-1/2 p-2 overline-top">
         <Pagination
           items={images}
           itemsPerPage={5}
           renderItem={(image) => (
-            <div key={image.id} className="flex justify-center items-center">
+            <div
+              key={image.id}
+              className="flex justify-center items-center w-full"
+            >
               <AlbumPost image={image} loadImages={fetchImages} />
             </div>
           )}

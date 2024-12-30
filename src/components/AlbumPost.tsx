@@ -44,7 +44,7 @@ const AlbumPost = ({
     <>
       <div
         key={image.id}
-        className="flex flex-col justify-center items-center gap-4 gradient-bg p-6 rounded-lg"
+        className="flex flex-col justify-center items-center gap-4 gradient-bg p-6 rounded-lg w-full"
       >
         <AlbumPostContent
           image={image}

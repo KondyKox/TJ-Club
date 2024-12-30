@@ -13,7 +13,7 @@ const AlbumSection = ({
 }) => {
   return (
     <div className="flex flex-col justify-center items-center w-full overline-top gap-20">
-      <div className="flex flex-col md:flex-row justify-center items-center w-full gap-4">
+      <div className="flex flex-col lg:flex-row justify-center items-center w-full gap-4">
         <div className="w-full md:w-1/2 flex flex-col justify-center items-center">
           <h2 className="sub-header">Tu nasz albumik</h2>
           <p className="text-sm text-akcent pb-2">Zdjęcia Tarnowskiej Mafii</p>
@@ -37,7 +37,7 @@ const AlbumSection = ({
                 } ${index === 0 && "drop-shadow-button"}`}
                 style={{
                   zIndex: images.length - index,
-                  marginLeft: isDesktop && index > 0 ? `-${index * 70}px` : "0",
+                  marginLeft: isDesktop && index > 0 ? `-${index * 90}px` : "0",
                   marginTop: !isDesktop && index > 0 ? `-${index * 70}px` : "0", // mobile
                 }}
               >

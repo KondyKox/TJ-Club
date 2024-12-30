@@ -15,7 +15,7 @@ const QuotesSection = ({
 }) => {
   return (
     <div className="flex flex-col justify-center items-center w-full overline-top gap-20">
-      <div className="flex flex-col md:flex-row-reverse justify-around items-center w-full gap-4">
+      <div className="flex flex-col lg:flex-row-reverse justify-around items-center w-full gap-4">
         <div className="flex flex-col justify-center items-center">
           <h2 className="sub-header">Mądre słowa</h2>
           <p className="text-sm text-akcent pb-2">Mądrości wielkich ludzi</p>
@@ -23,7 +23,7 @@ const QuotesSection = ({
         <div
           className={`flex pt-4 ${
             isDesktop ? "flex-row-reverse" : "flex-col"
-          } relative`}
+          } relative items-stretch`}
         >
           {quotes.map((quote, index) => (
             <Link
@@ -34,7 +34,7 @@ const QuotesSection = ({
               } ${index === 0 && "drop-shadow-button"}`}
               style={{
                 zIndex: quotes.length - index,
-                marginRight: isDesktop && index > 0 ? `-${index * 70}px` : "0",
+                marginRight: isDesktop && index > 0 ? `-${index * 90}px` : "0",
                 marginTop: !isDesktop && index > 0 ? `-${index * 70}px` : "0", // mobile
               }}
             >

@@ -30,10 +30,10 @@ const Quote = ({
   };
 
   return (
-    <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full gradient-bg p-6 rounded-lg">
+    <div className="flex flex-col md:flex-row justify-center items-center gap-4 w-full min-h-44 gradient-bg p-6 rounded-lg">
       {/* Quote content */}
       <div className="flex flex-col gap-2 w-full max-w-1/2">
-        <p className="text-akcent font-bold italic text-wrap text-sm md:text-lg">
+        <p className="text-akcent font-bold italic text-wrap text-sm md:text-lg md:w-72">
           &quot;{quote.content}&quot;
         </p>
         <div className="flex justify-between items-center w-full">
