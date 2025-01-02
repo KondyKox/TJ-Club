@@ -19,6 +19,16 @@ export default function RootLayout({
       <head>
         <link rel="icon" type="image/svg+xml" href="/logo.svg" />
         <title>Tarnowska Mafia</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="description"
+          content="Oficjalna strona Tarnowskiej Mafii."
+        />
+        <meta
+          name="keywords"
+          content="Tarnowska Mafia, Ekipa Totalnych Pojebów, Banda Kretynów, Tarnów Jezierny"
+        />
+        <meta name="author" content="Tarnowska Mafia" />
       </head>
       <body className="bg-primary text-secondary">
         {/* <ThemeButton /> */}

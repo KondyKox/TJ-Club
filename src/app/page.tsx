@@ -3,6 +3,7 @@
 import AlbumSection from "@/components/layout/AlbumSection";
 import LoadingOverlay from "@/components/layout/Loading";
 import QuotesSection from "@/components/layout/QuotesSection";
+import MainImage from "@/components/ui/MainImage";
 import { getImages } from "@/lib/utils/album";
 import { fetchQuotes } from "@/lib/utils/quotes";
 import { ImageProps } from "@/types/ImageProps";
@@ -13,8 +14,8 @@ import { useEffect, useState } from "react";
 export default function Home() {
   const [currentImages, setCurrentImages] = useState<ImageProps[]>([]);
   const [currentQuotes, setCurrentQuotes] = useState<QuoteProps[]>([]);
-  const [fade, setFade] = useState(false);
-  const [isDesktop, setIsDesktop] = useState(false);
+  const [fade, setFade] = useState<boolean>(false);
+  const [isDesktop, setIsDesktop] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(true);
 
   // Fetch quotes
@@ -103,15 +104,7 @@ export default function Home() {
             className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-0 opacity-70 w-32 md:w-72"
           />
         </div>
-        <Image
-          src={"/tj.jpg"}
-          alt="Tarnowska Mafia"
-          width={512}
-          height={512}
-          className="lg:max-w-md xl:max-w-2xl md:w-full p-2 rounded-3xl hover:rounded-none transition-all duration-300 
-                      ease-in-out drop-shadow-button"
-          priority
-        />
+        <MainImage fade={fade} />
       </div>
 
       {/* Album section */}
