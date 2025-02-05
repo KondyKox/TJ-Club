@@ -29,6 +29,7 @@ export default function RootLayout({
           content="Tarnowska Mafia, Ekipa Totalnych Pojebów, Banda Kretynów, Tarnów Jezierny"
         />
         <meta name="author" content="Tarnowska Mafia" />
+        <meta name="google-adsense-account" content="ca-pub-2534586073857624">
       </head>
       <body className="bg-primary text-secondary">
         {/* <ThemeButton /> */}
